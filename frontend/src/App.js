@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import './App.css';
-import Othello from './components/Othello'
+import Reversi from './components/Reversi'
 import PlayerInfo from './components/PlayerInfo'
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
 
   return (
     <div style={{width: '576px'}}>
-      <Othello 
+      <Reversi 
       currentPlayer={currentPlayer}
       setCurrentPlayer={setCurrentPlayer}
       />

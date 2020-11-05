@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Tile from './Tile'
 
-const Othello = ({ currentPlayer, setCurrentPlayer }) => {
+const Reversi = ({ currentPlayer, setCurrentPlayer }) => {
   const mockBoard = [
     ['', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', ''],
@@ -47,4 +47,4 @@ const Othello = ({ currentPlayer, setCurrentPlayer }) => {
   )
 }
 
-export default Othello
+export default Reversi
