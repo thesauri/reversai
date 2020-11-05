@@ -3,7 +3,7 @@ from reversi.reversi import game_session
 import json
 import websockets
 
-WEBSOCKET_PORT = 6666
+WEBSOCKET_PORT = 8008
 
 async def game_request_handler(websocket, path):
     print(f"Initializing game session")
