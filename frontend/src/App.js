@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import './App.css';
 import Reversi from './components/Reversi'
 import PlayerInfo from './components/PlayerInfo'
+import { useWsApi } from './services/websocket'
 
 function App() {
   const mockBoard = [
@@ -18,27 +19,34 @@ function App() {
   const [currentPlayer, setCurrentPlayer] = useState('white')
   const [board, setBoard] = useState(mockBoard)
 
-  useEffect(() => {
-    const url = 'ws://localhost:6666'
-    const socket = new WebSocket(url)
+  const handleBoardEvent = ({ board, turn }) => {
+    setBoard(board)
+    setCurrentPlayer(turn)
+  }
 
-    socket.onmessage = (event) => {
-      const newBoard = JSON.parse(event.data)
-      setBoard(newBoard)
-    }
-  }, [])
+  const getOtherPlayer = player => {
+    return player === 'black' ? 'white' : 'black'
+  }
+
+  const handleClick = (rowIndex, columnIndex) => {
+    sendEvent({rowIndex, columnIndex})
+  }
+
+  const [readyState, onBoardUpdate, sendEvent] = useWsApi()
+  onBoardUpdate.current = handleBoardEvent
 
   return (
     <div style={{width: '576px'}}>
       <Reversi
       board={board}
-      setBoard={setBoard}
-      currentPlayer={currentPlayer}
-      setCurrentPlayer={setCurrentPlayer}
+      handleClick={handleClick}
       />
       <PlayerInfo currentPlayer={currentPlayer}/>
     </div>
   );
 }
 
-export default App;
+export default App
+
+
+

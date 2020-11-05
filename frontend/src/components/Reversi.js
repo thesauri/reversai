@@ -1,18 +1,7 @@
 import React from 'react'
 import Tile from './Tile'
 
-const Reversi = ({ board, setBoard, currentPlayer, setCurrentPlayer }) => {
-  const getOtherPlayer = player => {
-    return player === 'black' ? 'white' : 'black'
-  }
-
-  const handleClick = (rowIndex, columnIndex) => {
-    const newBoard = [...board]
-    newBoard[rowIndex][columnIndex] = currentPlayer
-    setBoard(newBoard)
-    setCurrentPlayer(getOtherPlayer(currentPlayer))
-  }
-
+const Reversi = ({ board, handleClick }) => {
   const style = {
     display: 'inline-grid',
     gridGap: '2px',
