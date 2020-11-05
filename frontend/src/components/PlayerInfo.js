@@ -1,5 +1,4 @@
 import React from 'react'
-import TurnTracker from './TurnTracker'
 import Player from './Player'
 
 const PlayerInfo = ({ currentPlayer }) => {
