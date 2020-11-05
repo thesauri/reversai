@@ -61,6 +61,9 @@ def move(board, turn, position):
         new_cells_to_flip = __cells_to_flip_in_direction(board, position, direction)
         cells_to_flip.extend(new_cells_to_flip)
 
+    if len(cells_to_flip) == 0:
+        return None
+
     for row_index, column_index in cells_to_flip:
         board[row_index][column_index] = turn
 
