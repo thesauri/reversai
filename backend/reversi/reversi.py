@@ -27,7 +27,7 @@ async def game_session(websocket, path):
 async def __send_game_state(websocket, board, next_turn):
     game_state = json.dumps({
         "board": board,
-        "nextTurn": next_turn
+        "turn": next_turn
     })
     await websocket.send(game_state)
 
