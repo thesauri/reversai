@@ -1,19 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Tile from './Tile'
 
-const Reversi = ({ currentPlayer, setCurrentPlayer }) => {
-  const mockBoard = [
-    ['', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', ''],
-    ['', '', '','black','white', '', '', ''],
-    ['', '', '','white','black', '', '', ''],
-    ['', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', ''],
-  ]
-  const [board, setBoard] = useState(mockBoard)
-
+const Reversi = ({ board, setBoard, currentPlayer, setCurrentPlayer }) => {
   const getOtherPlayer = player => {
     return player === 'black' ? 'white' : 'black'
   }
