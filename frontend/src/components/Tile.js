@@ -38,7 +38,7 @@ const Tile = ({
   }
 
   return (
-    <button onClick={() => handleClick(rowIndex - 1, columnIndex - 1)} style={tileStyle}>
+    <button onClick={() => handleClick(rowIndex, columnIndex)} style={tileStyle}>
       <span style={circleStyle}></span>
     </button>
   )
