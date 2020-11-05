@@ -11,6 +11,7 @@ export const useWsApi = (url) => {
       setReadyState(socket.current.readyState)
     })
     socket.current.addEventListener("close", () => {
+      console.log('uh oh closed')
       setReadyState(socket.current.readyState)
     })
     socket.current.addEventListener("message", (event) => {
@@ -24,9 +25,8 @@ export const useWsApi = (url) => {
       console.error("Unable to send event: connection not open")
       return
     }
-    const payload = JSON.stringify({
-      data
-    })
+    const payload = JSON.stringify(data)
+    console.log('payload', payload)
     socket.current.send(payload)
   }
   return [readyState, onBoardUpdate, sendEvent]

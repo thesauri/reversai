@@ -20,6 +20,7 @@ function App() {
   const [board, setBoard] = useState(mockBoard)
 
   const handleBoardEvent = ({ board, turn }) => {
+    console.log(board)
     setBoard(board)
     setCurrentPlayer(turn)
   }
