@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Tile from './Tile'
 
-const Othello = (props) => {
+const Othello = ({ currentPlayer, setCurrentPlayer }) => {
   const mockBoard = [
     ['', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', ''],
@@ -13,7 +13,6 @@ const Othello = (props) => {
     ['', '', '', '', '', '', '', ''],
   ]
   const [board, setBoard] = useState(mockBoard)
-  const [currentPlayer, setCurrentPlayer] = useState('white')
 
   const getOtherPlayer = player => {
     return player === 'black' ? 'white' : 'black'

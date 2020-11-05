@@ -7,13 +7,13 @@ const Tile = ({
   handleClick
 }) => {
   const tileStyle = {
-    width: '4rem',
-    height: '4rem',
+    width: '70px',
+    height: '70px',
     gridColumnStart: columnIndex + 1,
     backgroundColor: 'rgb(230, 230, 220)',
     display: 'inline-block',
     border: 'none',
-    padding: '0.2rem 0.2rem',
+    padding: '5px 5px',
     margin: 0,
     textDecoration: 'none',
     textAlign: 'center',
@@ -22,8 +22,8 @@ const Tile = ({
     MozAppearance: 'none',
   }
   const circleStyle = {
-    height: '3.5rem',
-    width: '3.5rem',
+    height: '60px',
+    width: '60px',
     position: 'relative',
     borderRadius: '50%',
     display: 'inline-block',
