@@ -1,3 +1,4 @@
+import asyncio
 from .logic import move, default_game_board, is_valid_move
 from .helpers import print_board
 import json
@@ -32,6 +33,8 @@ async def human_vs_bot_session(websocket, is_bot_first, bot):
         board = new_board
         turn = __next_turn(turn)
         print(f"Valid move, bot's turn next")
+        await __send_game_state(websocket, board, turn)
+        await asyncio.sleep(2)
 
         # Bot playing
         position = bot.get_move(board)
