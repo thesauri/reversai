@@ -1,38 +1,24 @@
 import React from 'react'
-
-const Tile = ({ tile }) => {
-  const style = {
-    width: '20px',
-    height: '20px'
-  }
-  if (tile === 'white') {
-    style.background = 'white'
-  } else if (tile === 'black') {
-    style.background = 'black'
-  } else {
-    style.background = 'gray' 
-  }
-  return (
-    <button style={style}></button>
-  )
-}
-
-const Row = ({ row }) => {
-  return (
-    <div>
-      {row.map((tile, index) => (
-        <Tile key={index} tile={tile} />
-      ))}
-    </div>
-  )
-}
+import Tile from './Tile'
 
 const Othello = (props) => {
+  const style = {
+    display: 'inline-grid',
+    gridGap: '2px',
+  }
+
   return (
-    <div>
-      {props.board.map((row, index) => (
-        <Row key={index} row={row} />
-      ))}
+    <div style={style}>
+      {props.board.map((row, rowIndex) => {
+        return row.map((tile, columnIndex) => (
+          <Tile 
+          key={`${rowIndex}${columnIndex}`}
+          tile={tile}
+          rowIndex={rowIndex}
+          columnIndex={columnIndex}
+          />
+        ))
+      })}
     </div>
   )
 }
