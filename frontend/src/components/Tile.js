@@ -3,9 +3,10 @@ import React from 'react'
 const Tile = ({ 
   tile,
   rowIndex,
-  columnIndex
+  columnIndex,
+  handleClick
 }) => {
-  const style = {
+  const tileStyle = {
     width: '4rem',
     height: '4rem',
     gridColumnStart: columnIndex + 1,
@@ -17,14 +18,13 @@ const Tile = ({
     textDecoration: 'none',
     textAlign: 'center',
     transition: 'background 250ms ease-in-out, transform 150ms ease',
-    webkitAppearance: 'none',
-    mozAppearance: 'none',
+    WebkitAppearance: 'none',
+    MozAppearance: 'none',
   }
   const circleStyle = {
     height: '3.5rem',
     width: '3.5rem',
     position: 'relative',
-    //right: '8px',
     borderRadius: '50%',
     display: 'inline-block',
   }
@@ -34,11 +34,11 @@ const Tile = ({
   } else if (tile === 'black') {
     circleStyle.backgroundColor = 'black'
   } else {
-    style.cursor = 'pointer'
+    tileStyle.cursor = 'pointer'
   }
 
   return (
-    <button style={style}>
+    <button onClick={() => handleClick(rowIndex, columnIndex)} style={tileStyle}>
       <span style={circleStyle}></span>
     </button>
   )
