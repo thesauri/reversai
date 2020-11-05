@@ -1,18 +1,16 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import WS_URL from '../config';
 
 export const useWsApi = (url) => {
   const socket = useRef(new WebSocket(WS_URL));
   const onBoardUpdate = useRef(() => {console.error('No function here yet')})
-  const [readyState, setReadyState] = useState(WebSocket.CONNECTING);
-  
+
   useEffect(() => {
     socket.current.addEventListener("open", () => {
-      setReadyState(socket.current.readyState)
+      console.log('Websocket connection opened')
     })
     socket.current.addEventListener("close", () => {
-      console.log('uh oh closed')
-      setReadyState(socket.current.readyState)
+      console.log('Websocket connection closed')
     })
     socket.current.addEventListener("message", (event) => {
       const data = JSON.parse(event.data)
@@ -26,8 +24,7 @@ export const useWsApi = (url) => {
       return
     }
     const payload = JSON.stringify(data)
-    console.log('payload', payload)
     socket.current.send(payload)
   }
-  return [readyState, onBoardUpdate, sendEvent]
+  return [onBoardUpdate, sendEvent]
 }

@@ -1,6 +1,8 @@
 import React from 'react'
+import './Tile.css'
 
 const Tile = ({ 
+  currentPlayer,
   tile,
   rowIndex,
   columnIndex,
@@ -38,7 +40,7 @@ const Tile = ({
   }
 
   return (
-    <button onClick={() => handleClick(rowIndex, columnIndex)} style={tileStyle}>
+    <button className='tile' onClick={() => handleClick(rowIndex, columnIndex)} style={tileStyle}>
       <span style={circleStyle}></span>
     </button>
   )

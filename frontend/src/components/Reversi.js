@@ -5,6 +5,10 @@ const Reversi = ({ board, handleClick }) => {
   const style = {
     display: 'inline-grid',
     gridGap: '2px',
+    border: '1px solid #eee'
+  }
+  if (board === null) {
+    return (<div style={{width: '576px', height: '576px'}}>Loading...</div>)
   }
 
   return (

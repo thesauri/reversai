@@ -19,12 +19,9 @@ const PlayerInfo = ({ currentPlayer }) => {
   
   return (
     <div>
-      <div>
-        <TurnTracker player={currentPlayer}/>
-      </div>
       <div style={infoBoxStyle}>
-        <Player player={player1} col={1}/>
-        <Player player={player2} col={2}/>
+        <Player player={player1} col={1} currentPlayer={currentPlayer}/>
+        <Player player={player2} col={2} currentPlayer={currentPlayer}/>
       </div>
     </div>
   )
