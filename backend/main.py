@@ -1,5 +1,6 @@
 import asyncio
-from reversi.reversi import game_session
+from reversi.bots.oth3ll0grindr2000 import Oth3lloGrindr2000
+from reversi.reversi import human_vs_bot_session
 import json
 import websockets
 
@@ -7,7 +8,7 @@ WEBSOCKET_PORT = 8008
 
 async def game_request_handler(websocket, path):
     print(f"Initializing game session")
-    await game_session(websocket, path)
+    await human_vs_bot_session(websocket, True, Oth3lloGrindr2000("black"))
 
 game_server = websockets.serve(
     game_request_handler,

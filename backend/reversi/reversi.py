@@ -2,13 +2,23 @@ from .logic import move, default_game_board, is_valid_move
 from .helpers import print_board
 import json
 
-async def game_session(websocket, path):
+async def human_vs_bot_session(websocket, is_bot_first, bot):
     board = default_game_board()
     turn = "black"
 
+    if is_bot_first:
+        position = bot.get_move(board)
+        new_board = move(board, turn, position)
+        if new_board == None:
+            raise ValueError("Invalid move from bot, BYE!")
+        board = new_board
+        turn = __next_turn(turn)
+
     while True:
+        # Human playing
         await __send_game_state(websocket, board, turn)
-        print("Sent game board, waiting for move")
+        print("Sent game board, waiting for move from human")
+
         action = await websocket.recv()
         action = json.loads(action)
 
@@ -20,7 +30,38 @@ async def game_session(websocket, path):
             continue
 
         board = new_board
-        turn = "black" if turn == "white" else "white"
+        turn = __next_turn(turn)
+        print(f"Valid move, bot's turn next")
+
+        # Bot playing
+        position = bot.get_move(board)
+        new_board = move(board, turn, position)
+        if new_board == None:
+            raise ValueError("Invalid move from bot, BYE!")
+        board = new_board
+        turn = __next_turn(turn)
+
+
+async def human_vs_human_session(websocket):
+    board = default_game_board()
+    turn = "black"
+
+    while True:
+        await __send_game_state(websocket, board, turn)
+        print("Sent game board, waiting for move")
+
+        action = await websocket.recv()
+        action = json.loads(action)
+
+        position = (action["rowIndex"], action["columnIndex"])
+        new_board = move(board, turn, position)
+
+        if new_board == None:
+            print("Invalid move, ignoring")
+            continue
+
+        board = new_board
+        turn = __next_turn(turn)
         print(f"Valid move, {turn}'s turn next")
 
 
@@ -31,6 +72,8 @@ async def __send_game_state(websocket, board, next_turn):
     })
     await websocket.send(game_state)
 
+def __next_turn(current_turn):
+    return "black" if current_turn == "white" else "white"
 
 def test_game():
     board = default_game_board()
