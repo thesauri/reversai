@@ -1,13 +1,13 @@
 import asyncio
-from reversi.reversi import test_game
+from reversi.reversi import game_session
 import json
 import websockets
 
 WEBSOCKET_PORT = 6666
 
 async def game_request_handler(websocket, path):
-    board = json.dumps(test_game())
-    await websocket.send(board)
+    print(f"Initializing game session")
+    await game_session(websocket, path)
 
 game_server = websockets.serve(
     game_request_handler,
