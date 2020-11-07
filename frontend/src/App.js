@@ -26,6 +26,7 @@ function App() {
         <Reversi
         board={board}
         handleClick={handleClick}
+        currentPlayer={currentPlayer}
         />
         <PlayerInfo currentPlayer={currentPlayer}/>
       </div>

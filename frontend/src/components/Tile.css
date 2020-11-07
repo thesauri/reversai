@@ -1,3 +1,6 @@
-.tile:hover {
-  background-color: black;
+.emptyTile {
+  opacity: 0;
+}
+.emptyTile:hover {
+  opacity: 0.7;
 }

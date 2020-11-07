@@ -37,11 +37,13 @@ const Tile = ({
     circleStyle.backgroundColor = 'black'
   } else {
     tileStyle.cursor = 'pointer'
+    circleStyle.backgroundColor = currentPlayer
+    circleStyle.transition = 'all 0.2s ease 0s'
   }
 
   return (
-    <button className='tile' onClick={() => handleClick(rowIndex, columnIndex)} style={tileStyle}>
-      <span style={circleStyle}></span>
+    <button onClick={() => handleClick(rowIndex, columnIndex)} style={tileStyle}>
+      <span className={tile ? '': 'emptyTile'} style={circleStyle}></span>
     </button>
   )
 }
