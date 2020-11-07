@@ -1,6 +1,7 @@
 import argparse
 import asyncio
-from reversi.bots.oth3ll0grindr2000 import Oth3lloGrindr2000
+import importlib
+import reversi.bots
 from reversi.reversi import human_vs_bot_session, human_vs_human_session, bot_vs_bot_session
 import json
 import websockets
@@ -12,16 +13,14 @@ parser.add_argument(
     "--black",
     "-b",
     type=str,
-    choices=["bot", "human"],
-    help="Bot or human as black",
+    help="Black: human or bot_file_name (just the file name, no path bots/, no extension .py)",
     default="human"
 )
 parser.add_argument(
     "--white",
     "-w",
     type=str,
-    choices=["bot", "human"],
-    help="Bot or human as white",
+    help="White: human or bot_file_name.py (just the file name, no path bots/, no extension .py)",
     default="human"
 )
 args = parser.parse_args()
@@ -30,20 +29,33 @@ async def game_request_handler(websocket, path, black, white):
     if black == "human" and white == "human":
         print(f"Initializing human vs human session")
         await human_vs_human_session(websocket)
-    if black == "bot" and white =="bot":
+    if black != "human" and white != "human":
         print("Initializing bot vs bot session")
+        BlackBot = getattr(
+            importlib.import_module(f"reversi.bots.{black}"),
+            "Bot"
+        )
+        WhiteBot = getattr(
+            importlib.import_module(f"reversi.bots.{white}"),
+            "Bot"
+        )
         await bot_vs_bot_session(
             websocket,
-            Oth3lloGrindr2000("black"),
-            Oth3lloGrindr2000("white")
+            BlackBot("black"),
+            WhiteBot("white")
         )
     else:
         print(f"Initializing human vs bot session")
         is_bot_black = black == "bot"
+        bot_name = black if is_bot_black else white
+        Bot = getattr(
+            importlib.import_module(f"reversi.bots.{bot_name}"),
+            "Bot"
+        )
         await human_vs_bot_session(
             websocket,
             is_bot_black,
-            Oth3lloGrindr2000("black" if is_bot_black else "white")
+            Bot("black" if is_bot_black else "white")
         )
 
 game_server = websockets.serve(
