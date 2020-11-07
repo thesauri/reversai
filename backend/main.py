@@ -1,17 +1,51 @@
+import argparse
 import asyncio
 from reversi.bots.oth3ll0grindr2000 import Oth3lloGrindr2000
-from reversi.reversi import human_vs_bot_session
+from reversi.reversi import human_vs_bot_session, human_vs_human_session
 import json
 import websockets
 
 WEBSOCKET_PORT = 8008
 
-async def game_request_handler(websocket, path):
-    print(f"Initializing game session")
-    await human_vs_bot_session(websocket, True, Oth3lloGrindr2000("black"))
+parser = argparse.ArgumentParser(description="Run a game of reversi")
+parser.add_argument(
+    "--black",
+    "-b",
+    type=str,
+    choices=["bot", "human"],
+    help="Bot or human as black",
+    default="human"
+)
+parser.add_argument(
+    "--white",
+    "-w",
+    type=str,
+    choices=["bot", "human"],
+    help="Bot or human as white",
+    default="human"
+)
+args = parser.parse_args()
+
+async def game_request_handler(websocket, path, black, white):
+    if black == "human" and white == "human":
+        print(f"Initializing human vs human session")
+        await human_vs_human_session(websocket)
+    else:
+        print(f"Initializing human vs bot session")
+        is_bot_black = black == "bot"
+        await human_vs_bot_session(
+            websocket,
+            is_bot_black,
+            Oth3lloGrindr2000("black" if is_bot_black else "white")
+        )
 
 game_server = websockets.serve(
-    game_request_handler,
+    lambda websocket, path: game_request_handler(
+        websocket,
+        path,
+        args.black,
+        args.white
+    ),
     "localhost",
     WEBSOCKET_PORT
 )
