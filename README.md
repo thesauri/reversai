@@ -25,9 +25,9 @@ The environment is split into two parts: (1) a backend containing the bots and g
 
 ## Running
 1. In the `backend` directory, run `python main.py --black human --white human`
-  - This initializes a human vs. human session
-  - To use a bot, change *human* to the file name of the bot (without the `.py` extension)
-    - E.g. `--black oth3ll0grindr2000` to run the sample bot
+  1. This initializes a human vs. human session
+  2. To use a bot, change *human* to the file name of the bot (without the `.py` extension)
+    1. E.g. `--black oth3ll0grindr2000` to run the sample bot
 2. In a separate terminal session, navigate to the `frontend` directory and run `yarn start`
 3. The game should now be playable in the browser at http://localhost:3000.
 
