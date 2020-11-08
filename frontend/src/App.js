@@ -8,9 +8,17 @@ function App() {
   const [currentPlayer, setCurrentPlayer] = useState('white')
   const [board, setBoard] = useState(null)
 
-  const handleBoardEvent = ({ board, turn }) => {
-    setBoard(board)
-    setCurrentPlayer(turn)
+  const handleBoardEvent = ({ intermediateBoard, newBoard, turn }) => {
+    if (intermediateBoard) {
+      setBoard(intermediateBoard)
+      setTimeout(() => {
+        setBoard(newBoard)
+        setCurrentPlayer(turn)
+      }, 1000)
+    } else {
+      setBoard(newBoard)
+      setCurrentPlayer(turn)
+    }
   }
   
   const handleClick = (rowIndex, columnIndex) => {

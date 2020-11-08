@@ -46,7 +46,7 @@ async def game_request_handler(websocket, path, black, white):
         )
     else:
         print(f"Initializing human vs bot session")
-        is_bot_black = black == "bot"
+        is_bot_black = black != "human"
         bot_name = black if is_bot_black else white
         Bot = getattr(
             importlib.import_module(f"reversi.bots.{bot_name}"),
