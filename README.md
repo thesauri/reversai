@@ -14,9 +14,9 @@ The environment is split into two parts: (1) a backend containing the bots and g
 ## Setup
 1. Fork this repository (using the *Fork* button in the upper right corner)
 2. Clone the repository to your computer
-  1. Click the *Code* button
-  2. Copy the URL to your clipboard
-  3. Run `git clone <pasted url>`
+    1. Click the *Code* button
+    2. Copy the URL to your clipboard
+    3. Run `git clone <pasted url>`
 3. In a terminal, navigate to the `backend` directory
 4. Run `virtualenv venv`
 5. Run `source venv/bin/activate`
@@ -25,9 +25,9 @@ The environment is split into two parts: (1) a backend containing the bots and g
 
 ## Running
 1. In the `backend` directory, run `python main.py --black human --white human`
-  1. This initializes a human vs. human session
-  2. To use a bot, change *human* to the file name of the bot (without the `.py` extension)
-    1. E.g. `--black oth3ll0grindr2000` to run the sample bot
+    - This initializes a human vs. human session
+    - To use a bot, change *human* to the file name of the bot (without the `.py` extension)
+        - E.g. `--black oth3ll0grindr2000` to run the sample bot
 2. In a separate terminal session, navigate to the `frontend` directory and run `yarn start`
 3. The game should now be playable in the browser at http://localhost:3000.
 
