@@ -20,8 +20,9 @@ The environment is split into two parts: (1) a backend containing the bots and g
 3. In a terminal, navigate to the `backend` directory
 4. Run `virtualenv venv`
 5. Run `source venv/bin/activate`
-6. In a new terminal session, navigate to the `frontend` directory
-7. Run `yarn`
+6. Run `pip install -r requirements.txt`
+7. In a new terminal session, navigate to the `frontend` directory
+8. Run `yarn`
 
 ## Running
 1. In the `backend` directory, run `python main.py --black human --white human`
