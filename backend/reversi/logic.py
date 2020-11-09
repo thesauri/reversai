@@ -1,3 +1,4 @@
+from collections import namedtuple
 from copy import copy, deepcopy
 
 def default_game_board():
@@ -68,6 +69,46 @@ def move(board, turn, position):
         board[row_index][column_index] = turn
 
     return board
+
+def playable_moves(board, turn):
+    """
+    Get a list of playable moves for a given board and turn
+
+    board: The game board
+
+    turn: The player whose turn it is (black or white)
+
+    Returns: A list of playable moves, e.g. [(5,3), (2,2, (0,1)]
+    """
+    moves = []
+    for column_index in range(0, 8):
+        for row_index in range(0, 8):
+            position = (column_index, row_index)
+            if is_valid_move(board, turn, position):
+                moves.append(position)
+    return moves
+
+def calculate_score(board):
+    """
+    Calculate the score for a given board
+
+    board: The board
+
+    Returns: The scores as a named tuple, e.g. Score(black: 5, white: 10). Access the scores with calculate_score(board).black and .white.
+    """
+    black_score = 0
+    white_score = 0
+    for column_index in range(0, 8):
+        for row_index in range(0, 8):
+            cell = board[column_index][row_index]
+            if cell == "white":
+                white_score += 1
+            elif cell == "black":
+                black_score += 1
+    Score = namedtuple("Score", "black white")
+    return Score(black_score, white_score)
+
+
 
 def __cells_to_flip_in_direction(board, cell, direction):
     """
