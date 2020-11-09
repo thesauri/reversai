@@ -40,6 +40,8 @@ async def bot_vs_bot_session(websocket, black_bot, white_bot, minimum_delay=3, h
 
     print("Game over!")
     await __send_win_state(websocket, board, turn, previous_action, headless=headless)
+    score = calculate_score(board)
+    return score
 
 async def human_vs_bot_session(websocket, is_bot_first, bot, minimum_delay=3):
     board = default_game_board()
