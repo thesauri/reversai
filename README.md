@@ -32,6 +32,8 @@ The environment is split into two parts: (1) a backend containing the bots and g
 2. In a separate terminal session, navigate to the `frontend` directory and run `yarn start`
 3. The game should now be playable in the browser at http://localhost:3000.
 
+Games can also be run headless without the browser by adding the `--headless` flag to the Python command. This is useful for testing a bot quickly, e.g. against the sample random bot. It is only available for bot vs bot matches.
+
 ## Creating your own bot
 Bots are located in the `backend/reversi/bots/` directory.
 
