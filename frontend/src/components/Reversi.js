@@ -18,7 +18,7 @@ const Reversi = ({ board, handleClick, currentPlayer, latestPosition, winner }) 
     fontWeight: '900',
     color: 'white',
     backgroundColor: '#79c3bb',
-    opacity: '70%',
+    opacity: '90%',
   }
 
   if (winner === '') {

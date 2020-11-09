@@ -19,6 +19,7 @@ const Player = ({ player, col, currentPlayer, winner }) => {
   }
   if (player.playerColor === winner) {
     containerStyle.backgroundColor = '#79c3bb'
+    containerStyle.color = 'black'
   }
 
   const headerStyle = {

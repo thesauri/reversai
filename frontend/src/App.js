@@ -21,10 +21,16 @@ function App() {
     intermediateBoard,
     newBoard,
     turn,
-    latestPosition
+    latestPosition,
+    winner
   }) => {
-    if (intermediateBoard) {
-      //setLatestPosition(latestPosition)
+    if (latestPosition) {
+      setLatestPosition(latestPosition)
+    }
+    if (winner) {
+      setWinner(winner)
+    }
+    if (intermediateBoard) {    
       setBoard(intermediateBoard)
       setTimeout(() => {
         setBoard(newBoard)
