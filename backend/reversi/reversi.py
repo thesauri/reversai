@@ -141,6 +141,7 @@ async def __send_game_state(websocket, board, next_turn, previous_action=None):
         intermediate_board = deepcopy(previous_action.old_board)
         intermediate_board[previous_action.position[0]][previous_action.position[1]] = previous_action.turn
         game_state["intermediateBoard"] = intermediate_board
+        game_state["latestPosition"] = previous_action.position
 
     stringified_game_state = json.dumps(game_state)
     await websocket.send(stringified_game_state)
