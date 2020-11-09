@@ -12,7 +12,7 @@ const Tile = ({
   const tileStyle = {
     width: '70px',
     height: '70px',
-    gridColumnStart: columnIndex + 1,
+    gridArea: `${rowIndex + 1} / ${columnIndex + 1} / ${rowIndex + 1} / ${columnIndex + 1}`,
     backgroundColor: 'rgb(230, 230, 220)',
     display: 'inline-block',
     border: 'none',

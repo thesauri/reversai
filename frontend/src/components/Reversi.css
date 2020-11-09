@@ -1,0 +1,15 @@
+.board::before{
+  position: absolute;
+  content: '';
+  height: 576px;
+  width: 576px;
+  right: 0;
+  left: 0px;
+  top: 0px;
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#79c3bb+0,79c3bb+25,e9ce49+25,e9ce49+50,e0923c+50,e0923c+75,c73029+75,c73029+99 */
+  background: #79c3bb; /* Old browsers */
+  background: -moz-linear-gradient(top,  #79c3bb 0%, #79c3bb 25%, #e9ce49 25%, #e9ce49 50%, #e0923c 50%, #e0923c 75%, #c73029 75%, #c73029 99%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top,  #79c3bb 0%,#79c3bb 25%,#e9ce49 25%,#e9ce49 50%,#e0923c 50%,#e0923c 75%,#c73029 75%,#c73029 99%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom,  #79c3bb 0%,#79c3bb 25%,#e9ce49 25%,#e9ce49 50%,#e0923c 50%,#e0923c 75%,#c73029 75%,#c73029 99%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#79c3bb', endColorstr='#c73029',GradientType=0 ); /* IE6-9 */
+}

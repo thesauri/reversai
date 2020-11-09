@@ -8,6 +8,14 @@ function App() {
   const [currentPlayer, setCurrentPlayer] = useState('white')
   const [board, setBoard] = useState(null)
   const [latestPosition, setLatestPosition] = useState([null,null])
+  const [winner, setWinner] = useState('')
+
+  const countPieces = () => {
+    return {
+      white: board.count('white'),
+      black: board.count('black')
+    }
+  }
 
   const handleBoardEvent = ({
     intermediateBoard,
@@ -16,7 +24,7 @@ function App() {
     latestPosition
   }) => {
     if (intermediateBoard) {
-      setLatestPosition(latestPosition)
+      //setLatestPosition(latestPosition)
       setBoard(intermediateBoard)
       setTimeout(() => {
         setBoard(newBoard)
@@ -43,8 +51,9 @@ function App() {
         handleClick={handleClick}
         currentPlayer={currentPlayer}
         latestPosition={latestPosition}
+        winner={winner}
         />
-        <PlayerInfo currentPlayer={currentPlayer}/>
+        <PlayerInfo winner={winner} currentPlayer={currentPlayer}/>
       </div>
     </div>
   );
