@@ -83,10 +83,14 @@ const TournamentInfo = ({ matchHistory, groups }) => {
   const annotatedStandings = getStandings(matchHistory, groups)
 
   return (
-    <div>
-      {annotatedStandings.map((group, index) => {
-        return <Group standings={group.standings} key={group.groupId} number={index+1} />
-      })}
+    <div style={{display: 'inline-grid', margin: '30px'}}>
+      {annotatedStandings.map((group, index) => (
+        <Group
+          standings={group.standings}
+          key={group.groupId}
+          number={index+1}
+        />
+      ))}
     </div>
   )
 }

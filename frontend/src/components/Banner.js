@@ -3,15 +3,15 @@ import logo from '../ReversAI.png';
 
 const Banner = () => {
   const bannerStyle = {
-    gridArea: '1 / 1 / 1 / 3',
+    gridArea: '1 / 1 / 1 / 5',
     //textAlign: 'center',
-    padding: '20px',
+    padding: '10px',
     background: '#ddd',
     borderBottom: '3px solid #ccc',
   }
   return (
     <div style={bannerStyle}>
-      <img src={logo} alt="Logo" width='500px'/>
+      <img src={logo} alt="Logo" width='300px'/>
     </div>
   )
 }

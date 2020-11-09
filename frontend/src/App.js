@@ -113,7 +113,7 @@ function App() {
         />
         <PlayerInfo winner={winner} currentPlayer={currentPlayer}/>
       </div>
-      <div style={{gridColumnStart: '2'}}>
+      <div style={{gridArea: '2 / 2 / 2 / 5'}}>
         <TournamentInfo matchHistory={matchHistory} groups={groups}/>
       </div>
     </div>
