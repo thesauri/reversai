@@ -3,6 +3,7 @@ import './App.css';
 import Reversi from './components/Reversi'
 import PlayerInfo from './components/PlayerInfo'
 import TournamentInfo from './components/TournamentInfo'
+import Banner from './components/Banner'
 import { useWsApi } from './services/websocket'
 
 function App() {
@@ -101,7 +102,8 @@ function App() {
 
   return (
     <div style={{display: 'grid'}}>
-      <div style={{width: '576px'}}>
+      <Banner />
+      <div style={{width: '576px', gridColumnStart: '1'}}>
         <Reversi
         board={board}
         handleClick={handleClick}
@@ -111,7 +113,7 @@ function App() {
         />
         <PlayerInfo winner={winner} currentPlayer={currentPlayer}/>
       </div>
-      <div>
+      <div style={{gridColumnStart: '2'}}>
         <TournamentInfo matchHistory={matchHistory} groups={groups}/>
       </div>
     </div>
