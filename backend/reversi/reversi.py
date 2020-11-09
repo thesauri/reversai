@@ -7,11 +7,11 @@ import json
 
 PreviousAction = namedtuple("PreviousAction", "old_board turn position")
 
-async def bot_vs_bot_session(websocket, black_bot, white_bot, minimum_delay=3):
+async def bot_vs_bot_session(websocket, black_bot, white_bot, minimum_delay=3, headless=False):
     board = default_game_board()
     turn = "black"
     previous_action = None
-    await __send_game_state(websocket, board, turn)
+    await __send_game_state(websocket, board, turn, headless=headless)
     await asyncio.sleep(minimum_delay)
 
     while True:
@@ -26,14 +26,22 @@ async def bot_vs_bot_session(websocket, black_bot, white_bot, minimum_delay=3):
         turn = __next_turn(turn)
         is_win = len(playable_moves(board, turn)) == 0
 
-        await __send_game_state(websocket, board, turn, previous_action=previous_action)
+        await __send_game_state(
+            websocket,
+            board,
+            turn,
+            previous_action=previous_action,
+            headless=headless
+        )
 
         if is_win:
             break
         await asyncio.sleep(minimum_delay)
 
     print("Game over!")
-    await __send_win_state(websocket, board, turn, previous_action)
+    await __send_win_state(websocket, board, turn, previous_action, headless=headless)
+    score = calculate_score(board)
+    return score
 
 async def human_vs_bot_session(websocket, is_bot_first, bot, minimum_delay=3):
     board = default_game_board()
@@ -132,7 +140,7 @@ async def human_vs_human_session(websocket):
     await __send_win_state(websocket, board, turn, previous_action)
 
 
-async def __send_game_state(websocket, board, next_turn, previous_action=None):
+async def __send_game_state(websocket, board, next_turn, previous_action=None, headless=False):
     game_state = {
         "newBoard": board,
         "turn": next_turn
@@ -143,10 +151,13 @@ async def __send_game_state(websocket, board, next_turn, previous_action=None):
         game_state["intermediateBoard"] = intermediate_board
         game_state["latestPosition"] = previous_action.position
 
-    stringified_game_state = json.dumps(game_state)
-    await websocket.send(stringified_game_state)
+    if headless:
+        print_board(board)
+    else:
+        stringified_game_state = json.dumps(game_state)
+        await websocket.send(stringified_game_state)
 
-async def __send_win_state(websocket, board, turn, previous_action):
+async def __send_win_state(websocket, board, turn, previous_action, headless=False):
     intermediate_board = deepcopy(previous_action.old_board)
     intermediate_board[previous_action.position[0]][previous_action.position[1]] = previous_action.turn
 
@@ -160,8 +171,11 @@ async def __send_win_state(websocket, board, turn, previous_action):
         "winner": winner
     }
 
-    stringified_win_state = json.dumps(win_state)
-    await websocket.send(stringified_win_state)
+    if headless:
+        print(f"The winner is: {winner}")
+    else:
+        stringified_win_state = json.dumps(win_state)
+        await websocket.send(stringified_win_state)
 
 
 def __raise_exception_on_invalid_move(new_board):

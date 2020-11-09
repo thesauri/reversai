@@ -1,74 +1,18 @@
-import argparse
-import asyncio
-import importlib
-import reversi.bots
-from reversi.reversi import human_vs_bot_session, human_vs_human_session, bot_vs_bot_session
-import json
-import websockets
+from arguments import get_arguments
+from headless import run_headless_game
+from server import run_server
+from tournament import generate_tournament, play_tournament
 
-WEBSOCKET_PORT = 8008
+args = get_arguments()
 
-parser = argparse.ArgumentParser(description="Run a game of reversi")
-parser.add_argument(
-    "--black",
-    "-b",
-    type=str,
-    help="Black: human or bot_file_name (just the file name, no path bots/, no extension .py)",
-    default="human"
-)
-parser.add_argument(
-    "--white",
-    "-w",
-    type=str,
-    help="White: human or bot_file_name.py (just the file name, no path bots/, no extension .py)",
-    default="human"
-)
-args = parser.parse_args()
-
-async def game_request_handler(websocket, path, black, white):
-    if black == "human" and white == "human":
-        print(f"Initializing human vs human session")
-        await human_vs_human_session(websocket)
-    if black != "human" and white != "human":
-        print("Initializing bot vs bot session")
-        BlackBot = getattr(
-            importlib.import_module(f"reversi.bots.{black}"),
-            "Bot"
-        )
-        WhiteBot = getattr(
-            importlib.import_module(f"reversi.bots.{white}"),
-            "Bot"
-        )
-        await bot_vs_bot_session(
-            websocket,
-            BlackBot("black"),
-            WhiteBot("white")
-        )
-    else:
-        print(f"Initializing human vs bot session")
-        is_bot_black = black != "human"
-        bot_name = black if is_bot_black else white
-        Bot = getattr(
-            importlib.import_module(f"reversi.bots.{bot_name}"),
-            "Bot"
-        )
-        await human_vs_bot_session(
-            websocket,
-            is_bot_black,
-            Bot("black" if is_bot_black else "white")
-        )
-
-game_server = websockets.serve(
-    lambda websocket, path: game_request_handler(
-        websocket,
-        path,
-        args.black,
-        args.white
-    ),
-    "localhost",
-    WEBSOCKET_PORT
-)
-
-print(f"Running reversi server on port {WEBSOCKET_PORT}")
-asyncio.get_event_loop().run_until_complete(game_server)
-asyncio.get_event_loop().run_forever()
+if args.headless:
+    if args.white == "human" or args.black == "human":
+        print("ERROR: Only bots can play in headless mode")
+        exit(1)
+    run_headless_game(args.black, args.white)
+elif args.generate_tournament:
+    generate_tournament(args.generate_tournament)
+elif args.play_tournament:
+    play_tournament(args.play_tournament[0], args.play_tournament[1])
+else:
+    run_server(args.black, args.white)

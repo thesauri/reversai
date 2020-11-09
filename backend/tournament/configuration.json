@@ -1,0 +1,26 @@
+{
+    "teams": {
+        "The Big Five": "oth3ll0grindr2000",
+        "Crooked Panda": "oth3ll0grindr2000",
+        "Kalja e gott": "oth3ll0grindr2000",
+        "Slayers of the Universe": "oth3ll0grindr2000",
+        "Cloud chaser": "oth3ll0grindr2000",
+        "Firework lad": "oth3ll0grindr2000",
+        "Mike Wazowski": "oth3ll0grindr2000",
+        "Sandworm": "oth3ll0grindr2000"
+    },
+    "groups": [
+        [
+            "The Big Five",
+            "Crooked Panda",
+            "Kalja e gott",
+            "Slayers of the Universe"
+        ],
+        [
+            "Cloud chaser",
+            "Firework lad",
+            "Mike Wazowski",
+            "Sandworm"
+        ]
+    ]
+}
