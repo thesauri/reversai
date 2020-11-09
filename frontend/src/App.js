@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import './App.css';
 import Reversi from './components/Reversi'
 import PlayerInfo from './components/PlayerInfo'
+import TournamentInfo from './components/TournamentInfo'
 import { useWsApi } from './services/websocket'
 
 function App() {
@@ -18,12 +19,17 @@ function App() {
   }
 
   const handleBoardEvent = ({
+    matchHistory,
+    groups,
     intermediateBoard,
     newBoard,
     turn,
     latestPosition,
     winner
   }) => {
+    if (matchHistory) {
+      return
+    }
     if (latestPosition) {
       setLatestPosition(latestPosition)
     }
@@ -49,8 +55,52 @@ function App() {
   const [onBoardUpdate, sendEvent] = useWsApi()
   onBoardUpdate.current = handleBoardEvent
 
+  const matchHistory = [
+    {
+      black: {
+        name: 'name1',
+        score: 32,
+      },
+      white: {
+        name: 'name2',
+        score: 31,
+      }
+    },
+    {
+      black: {
+        name: 'name3',
+        score: 22,
+      },
+      white: {
+        name: 'name4',
+        score: 44,
+      }
+    },
+    {
+      black: {
+        name: 'name1',
+        score: 22,
+      },
+      white: {
+        name: 'name2',
+        score: 44,
+      }
+    },
+    {
+      black: {
+        name: 'name1',
+        score: 22,
+      },
+      white: {
+        name: 'name2',
+        score: 44,
+      }
+    },
+  ]
+  const groups = [['name1', 'name2'], ['name3', 'name4']]
+
   return (
-    <div>
+    <div style={{display: 'grid'}}>
       <div style={{width: '576px'}}>
         <Reversi
         board={board}
@@ -60,6 +110,9 @@ function App() {
         winner={winner}
         />
         <PlayerInfo winner={winner} currentPlayer={currentPlayer}/>
+      </div>
+      <div>
+        <TournamentInfo matchHistory={matchHistory} groups={groups}/>
       </div>
     </div>
   );
