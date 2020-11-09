@@ -9,11 +9,12 @@ def generate_tournament(configuration_file):
 
     matches = {
         'teams': configuration['teams'],
-        'groups': configuration['groups']
+        'groups': configuration['groups'],
+        'group_matches': {}
     }
     for group_index, group in enumerate(configuration['groups']):
         match_order = __randomized_match_order(group)
-        matches[group_index] = match_order
+        matches['group_matches'][group_index] = match_order
 
     print(json.dumps(matches))
 
