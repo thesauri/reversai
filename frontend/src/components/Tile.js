@@ -6,12 +6,13 @@ const Tile = ({
   tile,
   rowIndex,
   columnIndex,
-  handleClick
+  handleClick,
+  highlight,
 }) => {
   const tileStyle = {
     width: '70px',
     height: '70px',
-    gridColumnStart: columnIndex + 1,
+    gridArea: `${rowIndex + 1} / ${columnIndex + 1} / ${rowIndex + 1} / ${columnIndex + 1}`,
     backgroundColor: 'rgb(230, 230, 220)',
     display: 'inline-block',
     border: 'none',
@@ -39,6 +40,11 @@ const Tile = ({
     tileStyle.cursor = 'pointer'
     circleStyle.backgroundColor = currentPlayer
     circleStyle.transition = 'all 0.2s ease 0s'
+  }
+
+  if (highlight) {
+    tileStyle.border = '4px solid #79c3bb'
+    tileStyle.padding = '1px'
   }
 
   return (

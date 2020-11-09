@@ -7,14 +7,35 @@ import { useWsApi } from './services/websocket'
 function App() {
   const [currentPlayer, setCurrentPlayer] = useState('white')
   const [board, setBoard] = useState(null)
+  const [latestPosition, setLatestPosition] = useState([null,null])
+  const [winner, setWinner] = useState('')
 
-  const handleBoardEvent = ({ intermediateBoard, newBoard, turn }) => {
-    if (intermediateBoard) {
+  const countPieces = () => {
+    return {
+      white: board.count('white'),
+      black: board.count('black')
+    }
+  }
+
+  const handleBoardEvent = ({
+    intermediateBoard,
+    newBoard,
+    turn,
+    latestPosition,
+    winner
+  }) => {
+    if (latestPosition) {
+      setLatestPosition(latestPosition)
+    }
+    if (winner) {
+      setWinner(winner)
+    }
+    if (intermediateBoard) {    
       setBoard(intermediateBoard)
       setTimeout(() => {
         setBoard(newBoard)
         setCurrentPlayer(turn)
-      }, 1000)
+      }, 300)
     } else {
       setBoard(newBoard)
       setCurrentPlayer(turn)
@@ -35,8 +56,10 @@ function App() {
         board={board}
         handleClick={handleClick}
         currentPlayer={currentPlayer}
+        latestPosition={latestPosition}
+        winner={winner}
         />
-        <PlayerInfo currentPlayer={currentPlayer}/>
+        <PlayerInfo winner={winner} currentPlayer={currentPlayer}/>
       </div>
     </div>
   );

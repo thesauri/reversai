@@ -1,7 +1,7 @@
 import React from 'react'
 import Player from './Player'
 
-const PlayerInfo = ({ currentPlayer }) => {
+const PlayerInfo = ({ currentPlayer, winner }) => {
   const player1 = {
     name: '0th3ll0GRINDR2000',
     creator: 'sammoa',
@@ -19,8 +19,8 @@ const PlayerInfo = ({ currentPlayer }) => {
   return (
     <div>
       <div style={infoBoxStyle}>
-        <Player player={player1} col={1} currentPlayer={currentPlayer}/>
-        <Player player={player2} col={2} currentPlayer={currentPlayer}/>
+        <Player player={player1} col={1} currentPlayer={currentPlayer} winner={winner}/>
+        <Player player={player2} col={2} currentPlayer={currentPlayer} winner={winner}/>
       </div>
     </div>
   )

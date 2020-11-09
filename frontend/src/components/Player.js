@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Player = ({ player, col, currentPlayer }) => {
+const Player = ({ player, col, currentPlayer, winner }) => {
   let containerStyle = {
     textAlign: 'center',
     gridColumnStart: col,
@@ -16,6 +16,10 @@ const Player = ({ player, col, currentPlayer }) => {
       color: 'black',
       backgroundColor: 'white',
     }
+  }
+  if (player.playerColor === winner) {
+    containerStyle.backgroundColor = '#79c3bb'
+    containerStyle.color = 'black'
   }
 
   const headerStyle = {
