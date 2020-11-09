@@ -7,14 +7,21 @@ import { useWsApi } from './services/websocket'
 function App() {
   const [currentPlayer, setCurrentPlayer] = useState('white')
   const [board, setBoard] = useState(null)
+  const [latestPosition, setLatestPosition] = useState([null,null])
 
-  const handleBoardEvent = ({ intermediateBoard, newBoard, turn }) => {
+  const handleBoardEvent = ({
+    intermediateBoard,
+    newBoard,
+    turn,
+    latestPosition
+  }) => {
     if (intermediateBoard) {
+      setLatestPosition(latestPosition)
       setBoard(intermediateBoard)
       setTimeout(() => {
         setBoard(newBoard)
         setCurrentPlayer(turn)
-      }, 1000)
+      }, 300)
     } else {
       setBoard(newBoard)
       setCurrentPlayer(turn)
@@ -35,6 +42,7 @@ function App() {
         board={board}
         handleClick={handleClick}
         currentPlayer={currentPlayer}
+        latestPosition={latestPosition}
         />
         <PlayerInfo currentPlayer={currentPlayer}/>
       </div>

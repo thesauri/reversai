@@ -6,7 +6,8 @@ const Tile = ({
   tile,
   rowIndex,
   columnIndex,
-  handleClick
+  handleClick,
+  highlight,
 }) => {
   const tileStyle = {
     width: '70px',
@@ -39,6 +40,11 @@ const Tile = ({
     tileStyle.cursor = 'pointer'
     circleStyle.backgroundColor = currentPlayer
     circleStyle.transition = 'all 0.2s ease 0s'
+  }
+
+  if (highlight) {
+    tileStyle.border = '4px solid #79c3bb'
+    tileStyle.padding = '1px'
   }
 
   return (

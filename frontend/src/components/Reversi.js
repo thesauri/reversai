@@ -1,7 +1,7 @@
 import React from 'react'
 import Tile from './Tile'
 
-const Reversi = ({ board, handleClick, currentPlayer }) => {
+const Reversi = ({ board, handleClick, currentPlayer, latestPosition }) => {
   const style = {
     display: 'inline-grid',
     gridGap: '2px',
@@ -22,6 +22,7 @@ const Reversi = ({ board, handleClick, currentPlayer }) => {
           columnIndex={columnIndex}
           handleClick={handleClick}
           currentPlayer={currentPlayer}
+          highlight={rowIndex === latestPosition[0] && columnIndex === latestPosition[1]}
           />
         ))
       })}
