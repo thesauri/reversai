@@ -17,5 +17,6 @@ def get_arguments():
         default="human"
     )
     parser.add_argument("--headless", action="store_true")
+    parser.add_argument("--generate_tournament", type=str)
     args = parser.parse_args()
     return args
