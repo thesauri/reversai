@@ -1,7 +1,7 @@
 import asyncio
 from collections import namedtuple
 from copy import deepcopy
-from .logic import move, default_game_board, is_valid_move, playable_moves, calculate_score
+from .logic import move, default_game_board, is_valid_move, playable_moves, calculate_score, has_game_ended
 from .helpers import print_board
 import json
 
@@ -23,8 +23,8 @@ async def bot_vs_bot_session(websocket, black_bot, white_bot, minimum_delay=3, h
 
         previous_action = PreviousAction(board, turn, position)
         board = new_board
-        turn = __next_turn(turn)
-        is_win = len(playable_moves(board, turn)) == 0
+        turn = __next_turn(board, turn)
+        is_win = has_game_ended(board)
 
         await __send_game_state(
             websocket,
@@ -65,7 +65,7 @@ async def human_vs_bot_session(websocket, is_bot_first, bot, minimum_delay=3):
 
         previous_action = PreviousAction(board, turn, position)
         board = new_board
-        turn = __next_turn(turn)
+        turn = __next_turn(board, turn)
 
         await __send_game_state(websocket,
             board,
@@ -90,9 +90,9 @@ async def human_vs_bot_session(websocket, is_bot_first, bot, minimum_delay=3):
 
         previous_action = PreviousAction(board, turn, position)
         board = new_board
-        turn = __next_turn(turn)
+        turn = __next_turn(board, turn)
 
-        is_win = len(playable_moves(board, turn)) == 0
+        is_win = has_game_ended(board)
         if is_win:
             break
 
@@ -106,8 +106,8 @@ async def human_vs_bot_session(websocket, is_bot_first, bot, minimum_delay=3):
 
         previous_action = PreviousAction(board, turn, position)
         board = new_board
-        turn = __next_turn(turn)
-        is_win = len(playable_moves(board, turn)) == 0
+        turn = __next_turn(board, turn)
+        is_win = has_game_ended(board)
 
         if is_win:
             break
@@ -145,8 +145,8 @@ async def human_vs_human_session(websocket):
 
         previous_action = PreviousAction(board, turn, position)
         board = new_board
-        turn = __next_turn(turn)
-        is_win = len(playable_moves(board, turn)) == 0
+        turn = __next_turn(board, turn)
+        is_win = has_game_ended(board)
 
         if is_win:
             break
@@ -211,8 +211,12 @@ def __raise_exception_on_invalid_move(new_board):
         raise ValueError("Invalid move from bot, BYE!")
 
 
-def __next_turn(current_turn):
-    return "black" if current_turn == "white" else "white"
+def __next_turn(board, current_turn):
+    next_turn = "black" if current_turn == "white" else "white"
+    if len(playable_moves(board, next_turn)) > 0:
+        return next_turn
+    else:
+        return current_turn
 
 def test_game():
     board = default_game_board()
