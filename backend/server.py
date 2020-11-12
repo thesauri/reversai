@@ -5,6 +5,8 @@ import json
 import reversi.bots
 from reversi.reversi import human_vs_bot_session, human_vs_human_session, bot_vs_bot_session
 import websockets
+import config
+import os
 
 WEBSOCKET_PORT = 8008
 
@@ -34,10 +36,10 @@ def run_server(black, white):
                 Bot("black" if is_bot_black else "white"),
                 minimum_delay=0.1
             )
-
+    address = os.getenv('IP') if os.getenv('IP') else 'localhost'
     game_server = websockets.serve(
         game_request_handler,
-        "localhost",
+        address,
         WEBSOCKET_PORT
     )
 
