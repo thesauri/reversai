@@ -11,7 +11,7 @@ async def bot_vs_bot_session(websocket, black_bot, white_bot, minimum_delay=3, h
     board = default_game_board()
     turn = "black"
     previous_action = None
-    await __send_game_state(websocket, board, turn, headless=headless)
+    await __send_game_state(websocket, board, turn, black_bot=black_bot, white_bot=white_bot, headless=headless)
     await asyncio.sleep(minimum_delay)
 
     while True:
@@ -30,6 +30,8 @@ async def bot_vs_bot_session(websocket, black_bot, white_bot, minimum_delay=3, h
             websocket,
             board,
             turn,
+            black_bot=black_bot,
+            white_bot=white_bot,
             previous_action=previous_action,
             headless=headless
         )
@@ -48,7 +50,12 @@ async def human_vs_bot_session(websocket, is_bot_first, bot, minimum_delay=3):
     turn = "black"
     previous_action = None
 
-    await __send_game_state(websocket, board, turn)
+    await __send_game_state(websocket,
+        board,
+        turn,
+        black_bot=bot if is_bot_first else None,
+        white_bot=None if is_bot_first else bot,
+    )
 
     if is_bot_first:
         await asyncio.sleep(minimum_delay)
@@ -60,7 +67,13 @@ async def human_vs_bot_session(websocket, is_bot_first, bot, minimum_delay=3):
         board = new_board
         turn = __next_turn(turn)
 
-        await __send_game_state(websocket, board, turn, previous_action=previous_action)
+        await __send_game_state(websocket,
+            board,
+            turn,
+            black_bot=bot if is_bot_first else None,
+            white_bot=None if is_bot_first else bot,
+        )
+
 
     while True:
         # Human playing
@@ -100,7 +113,12 @@ async def human_vs_bot_session(websocket, is_bot_first, bot, minimum_delay=3):
             break
 
 
-        await __send_game_state(websocket, board, turn, previous_action=previous_action)
+        await __send_game_state(websocket,
+            board,
+            turn,
+            black_bot=bot if is_bot_first else None,
+            white_bot=None if is_bot_first else bot,
+        )
 
     print("Game over!")
     await __send_win_state(websocket, board, turn, previous_action)
@@ -140,7 +158,7 @@ async def human_vs_human_session(websocket):
     await __send_win_state(websocket, board, turn, previous_action)
 
 
-async def __send_game_state(websocket, board, next_turn, previous_action=None, headless=False):
+async def __send_game_state(websocket, board, next_turn, black_bot=None, white_bot=None, previous_action=None, headless=False):
     game_state = {
         "newBoard": board,
         "turn": next_turn
@@ -150,6 +168,16 @@ async def __send_game_state(websocket, board, next_turn, previous_action=None, h
         intermediate_board[previous_action.position[0]][previous_action.position[1]] = previous_action.turn
         game_state["intermediateBoard"] = intermediate_board
         game_state["latestPosition"] = previous_action.position
+    if black_bot != None:
+        game_state["black"] = {
+            "name": black_bot.name,
+            "author": black_bot.author
+        }
+    if white_bot != None:
+        game_state["white"] = {
+            "name": white_bot.name,
+            "author": white_bot.author
+        }
 
     if headless:
         print_board(board)
