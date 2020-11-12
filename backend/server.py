@@ -36,13 +36,13 @@ def run_server(black, white):
                 Bot("black" if is_bot_black else "white"),
                 minimum_delay=0.1
             )
-    address = os.getenv('IP') if os.getenv('IP') else 'localhost'
+    address = os.getenv('REACT_APP_IP') if os.getenv('REACT_APP_IP') else 'localhost'
     game_server = websockets.serve(
         game_request_handler,
         address,
         WEBSOCKET_PORT
     )
 
-    print(f"Running reversi server on port {WEBSOCKET_PORT}")
+    print(f"Running reversi server on {address}:{WEBSOCKET_PORT}")
     asyncio.get_event_loop().run_until_complete(game_server)
     asyncio.get_event_loop().run_forever()
