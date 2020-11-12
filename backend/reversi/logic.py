@@ -88,6 +88,18 @@ def playable_moves(board, turn):
                 moves.append(position)
     return moves
 
+def has_game_ended(board):
+    """
+    Checks whether the game has ended. A game has ended if neither black nor white can play.
+
+    board: The game board
+
+    Returns: True or False
+    """
+    return \
+        len(playable_moves(board, "white")) == 0 and \
+        len(playable_moves(board, "black")) == 0
+
 def calculate_score(board):
     """
     Calculate the score for a given board

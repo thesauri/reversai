@@ -1,5 +1,5 @@
 import random
-from ..logic import is_valid_move
+from ...logic import is_valid_move
 
 # Do NOT rename this class
 class Bot:

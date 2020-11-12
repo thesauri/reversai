@@ -35,11 +35,11 @@ The environment is split into two parts: (1) a backend containing the bots and g
 Games can also be run headless without the browser by adding the `--headless` flag to the Python command. This is useful for testing a bot quickly, e.g. against the sample random bot. It is only available for bot vs bot matches.
 
 ## Creating your own bot
-Bots are located in the `backend/reversi/bots/` directory.
+Bots are located as `<bot_name>/bot.py` entries of the `backend/reversi/bots/` directory.
 
-1. Copy the sample bot `oth3ll0grindr2000.py` and place the copy in the `bots` directory.
-2. Name the file with the name of your bot
-3. Write your bot in this file by implementing the `get_move` method.
+1. Copy the sample bot folder `oth3ll0grindr2000` and place the copy in the `bots` directory.
+2. Rename the directory to the name of your bot
+3. Write your bot in the `<bot_name>/bot.py` file by implementing the `get_move` method.
 
 ## Bot submission
 1. On your computer, commit the bot and push it to your forked repository
