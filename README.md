@@ -21,8 +21,9 @@ The environment is split into two parts: (1) a backend containing the bots and g
 4. Run `virtualenv venv`
 5. Run `source venv/bin/activate`
 6. Run `pip install -r requirements.txt`
-7. In a new terminal session, navigate to the `frontend` directory
-8. Run `yarn`
+7. If you want to add some other packages, contact the organizers
+8. In a new terminal session, navigate to the `frontend` directory
+9. Run `yarn`
 
 ## Running
 1. In the `backend` directory, run `python main.py --black human --white human`
@@ -40,6 +41,7 @@ Bots are located as `<bot_name>/bot.py` entries of the `backend/reversi/bots/` d
 1. Copy the sample bot folder `oth3ll0grindr2000` and place the copy in the `bots` directory.
 2. Rename the directory to the name of your bot
 3. Write your bot in the `<bot_name>/bot.py` file by implementing the `get_move` method.
+4. Some preselected Python packages are available to use (see `backend/requirements.txt)`. If you want to add some other Python packages, contact the organizers.
 
 ## Bot submission
 1. On your computer, commit the bot and push it to your forked repository
