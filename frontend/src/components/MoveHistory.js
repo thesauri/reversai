@@ -15,7 +15,7 @@ const MoveHistory = ({ history }) => {
           move.move &&
             <div style={{display: 'grid', width: '150px', textAlign: 'left', backgroundColor: move.player === 'white' ? '#fff' : '#f0f0f0',}}>
               <div style={{gridColumnStart: '1'}}>{move.player}</div>
-              <div style={{gridColumnStart: '2'}}>{move.move[0]}, {move.move[1]}</div>
+              <div style={{gridColumnStart: '2'}}>{move.move[0] + 1}, {move.move[1] + 1}</div>
               <div style={{gridColumnStart: '3'}}>{Math.round(move.time * 10)/10}</div>
             </div>
           }

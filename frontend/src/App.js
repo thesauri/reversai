@@ -51,7 +51,7 @@ function App() {
       setMoveHistory(moveHistory.concat(
         {move: latestPosition, time: deltaTime, player: turn === 'white' ? 'black' : 'white'}))
     } 
-    if (newBoard) {
+    else {
       setBoard(newBoard)
       setCurrentPlayer(turn)
     }
