@@ -1,6 +1,7 @@
 import asyncio
 from collections import namedtuple
 from copy import deepcopy
+from datetime import datetime
 from .logic import move, default_game_board, is_valid_move, playable_moves, calculate_score, has_game_ended
 from .helpers import print_board
 import json
@@ -17,7 +18,8 @@ async def bot_vs_bot_session(websocket, black_bot, white_bot, minimum_delay=3, h
     while True:
         print(f"{turn}'s turn to play")
         bot = black_bot if turn == "black" else white_bot
-        position = bot.get_move(board)
+        (position, delta_time) = __get_move_with_delta_time(bot, board)
+        print(f"Time taken: {delta_time} s")
         new_board = move(board, turn, position)
         __raise_exception_on_invalid_move(new_board)
 
@@ -33,7 +35,8 @@ async def bot_vs_bot_session(websocket, black_bot, white_bot, minimum_delay=3, h
             black_bot=black_bot,
             white_bot=white_bot,
             previous_action=previous_action,
-            headless=headless
+            headless=headless,
+            delta_time=delta_time
         )
 
         if is_win:
@@ -59,7 +62,8 @@ async def human_vs_bot_session(websocket, is_bot_first, bot, minimum_delay=3):
 
     if is_bot_first:
         await asyncio.sleep(minimum_delay)
-        position = bot.get_move(board)
+        (position, delta_time) = __get_move_with_delta_time(bot, board)
+        print(f"Time taken: {delta_time} s")
         new_board = move(board, turn, position)
         __raise_exception_on_invalid_move(new_board)
 
@@ -72,6 +76,7 @@ async def human_vs_bot_session(websocket, is_bot_first, bot, minimum_delay=3):
             turn,
             black_bot=bot if is_bot_first else None,
             white_bot=None if is_bot_first else bot,
+            delta_time=delta_time
         )
 
 
@@ -100,7 +105,8 @@ async def human_vs_bot_session(websocket, is_bot_first, bot, minimum_delay=3):
         await asyncio.sleep(minimum_delay)
 
         # Bot playing
-        position = bot.get_move(board)
+        (position, delta_time) = __get_move_with_delta_time(bot, board)
+        print(f"Time taken: {delta_time} s")
         new_board = move(board, turn, position)
         __raise_exception_on_invalid_move(new_board)
 
@@ -118,6 +124,7 @@ async def human_vs_bot_session(websocket, is_bot_first, bot, minimum_delay=3):
             turn,
             black_bot=bot if is_bot_first else None,
             white_bot=None if is_bot_first else bot,
+            delta_time=delta_time
         )
 
     print("Game over!")
@@ -158,7 +165,7 @@ async def human_vs_human_session(websocket):
     await __send_win_state(websocket, board, turn, previous_action)
 
 
-async def __send_game_state(websocket, board, next_turn, black_bot=None, white_bot=None, previous_action=None, headless=False):
+async def __send_game_state(websocket, board, next_turn, black_bot=None, white_bot=None, previous_action=None, delta_time=None, headless=False):
     game_state = {
         "newBoard": board,
         "turn": next_turn
@@ -178,12 +185,23 @@ async def __send_game_state(websocket, board, next_turn, black_bot=None, white_b
             "name": white_bot.name,
             "author": white_bot.author
         }
+    if delta_time != None:
+        game_state["deltaTime"] = delta_time
 
     if headless:
         print_board(board)
     else:
         stringified_game_state = json.dumps(game_state)
         await websocket.send(stringified_game_state)
+
+def __get_move_with_delta_time(bot, board):
+    time_before = datetime.now()
+    position = bot.get_move(board)
+    time_after = datetime.now()
+    delta_time = (time_after - time_before).seconds + round((time_after - time_before).microseconds / 1000000, 2)
+    MoveWithTime = namedtuple("MoveWithTime", "position delta_time")
+    return MoveWithTime(position, delta_time)
+
 
 async def __send_win_state(websocket, board, turn, previous_action, headless=False):
     intermediate_board = deepcopy(previous_action.old_board)
