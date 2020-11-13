@@ -48,11 +48,14 @@ function App() {
         setBoard(newBoard)
         setCurrentPlayer(turn)
       }, 300)
-      setMoveHistory(moveHistory.concat({move: latestPosition, time: deltaTime}))
+      setMoveHistory(moveHistory.concat(
+        {move: latestPosition, time: deltaTime, player: turn === 'white' ? 'black' : 'white'}))
     } 
     if (newBoard) {
       setBoard(newBoard)
       setCurrentPlayer(turn)
+    }
+    if (!intermediateBoard && !matchHistory) {
       setPlayers({
         white: white || { name: 'Human', author: 'God' },
         black: black || { name: 'Human', author: 'God' }
@@ -73,7 +76,7 @@ function App() {
   return (
     <div style={{display: 'grid'}}>
       <Banner />
-      <div style={{width: '576px', gridColumnStart: '1', display: 'grid'}}>
+      <div style={{width: '576px', gridColumnStart: '1'}}>
         <Reversi
         board={board}
         handleClick={handleClick}
@@ -81,16 +84,16 @@ function App() {
         latestPosition={latestPosition}
         winner={winner}
         />
-        <div style={{gridColumnStart: '2'}}>
-          <MoveHistory history={moveHistory} />
-        </div>
         <PlayerInfo
           winner={winner}
           currentPlayer={currentPlayer}
           players={players}
         />
       </div>
-      <div style={{gridArea: '2 / 2 / 2 / 5'}}>
+      <div style={{gridArea: '2 / 2 / 2 / 2', textAlign: 'left'}}>
+          <MoveHistory history={moveHistory} />
+        </div>
+      <div style={{gridArea: '3 / 2 / 3 / 5'}}>
         <TournamentInfo matchHistory={matchHistory} groups={groups}/>
       </div>
     </div>
