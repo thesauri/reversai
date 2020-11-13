@@ -41,7 +41,8 @@ Bots are located as `<bot_name>/bot.py` entries of the `backend/reversi/bots/` d
 1. Copy the sample bot folder `oth3ll0grindr2000` and place the copy in the `bots` directory.
 2. Rename the directory to the name of your bot
 3. Write your bot in the `<bot_name>/bot.py` file by implementing the `get_move` method.
-4. Some preselected Python packages are available to use (see `backend/requirements.txt)`. If you want to add some other Python packages, contact the organizers.
+
+Note: **Maximum of 5 seconds of execution time per move allowed**. This is a soft limit, i.e. the bot won't be killed after this time, but execution time is measured and the bot will be disqualified if it takes significantly more time than this. Execution time can be seen both in both the frontend and the Python backend as `Time taken: 0.0 s` log statements.
 
 ## Bot submission
 1. On your computer, commit the bot and push it to your forked repository
