@@ -52,7 +52,8 @@ The functions are implemented in `reversi.logic`, but have been imported to the 
 The following functions are available:
 
 ### is_valid_move
-```def is_valid_move(board, turn, position):
+```
+def is_valid_move(board, turn, position):
     """
     Test whether a game move is valid
 
@@ -67,7 +68,8 @@ The following functions are available:
 ```
 
 ### move
-```def move(board, turn, position):
+```
+def move(board, turn, position):
     """
     Issue a game move
 
@@ -81,7 +83,8 @@ The following functions are available:
 ```
 
 ### playable_moves
-```def playable_moves(board, turn):
+```
+def playable_moves(board, turn):
     """
     Get a list of playable moves for a given board and turn
 
@@ -94,7 +97,8 @@ The following functions are available:
 ```
 
 ### has_game_ended
-```def has_game_ended(board):
+```
+def has_game_ended(board):
     """
     Checks whether the game has ended. A game has ended if neither black nor white can play.
 
@@ -105,7 +109,8 @@ The following functions are available:
 ```
 
 ### calculate_score
-```def calculate_score(board):
+```
+def calculate_score(board):
     """
     Calculate the score for a given board
 
