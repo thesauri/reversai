@@ -32,7 +32,7 @@ const Player = ({ player, col, currentPlayer, winner }) => {
     <div style={containerStyle}>
       <h2 style={headerStyle}>{player.playerColor.toUpperCase()}</h2>
       <div>{player.name}</div>
-      <div>Made by {player.creator}</div>
+      <div>Made by {player.author}</div>
     </div>
   )
 }

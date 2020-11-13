@@ -17,15 +17,17 @@ const Group = ({ standings, number }) => {
   return (
     <div style={style}>
       <h2 style={headerStyle}>{`GROUP ${number}`}</h2>
-      <ul>
-      {standings.map((bot) => (
+      <div>
+      {standings.map((bot, i) => (
         <BotInfo 
+          key={bot.name}
           name={bot.name}
           points={bot.points}
           annotation={bot.annotation}
+          stripe={i%2===1}
         />
         ))}
-      </ul>
+      </div>
     </div>
   )
 }
