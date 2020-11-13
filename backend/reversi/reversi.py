@@ -3,7 +3,7 @@ from collections import namedtuple
 from copy import deepcopy
 from datetime import datetime
 from .logic import move, default_game_board, is_valid_move, playable_moves, calculate_score, has_game_ended
-from .helpers import print_board
+from .printing import print_board
 import json
 
 PreviousAction = namedtuple("PreviousAction", "old_board turn position")
