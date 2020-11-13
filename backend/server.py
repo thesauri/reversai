@@ -23,7 +23,7 @@ def run_server(black, white):
                 websocket,
                 BlackBot("black"),
                 WhiteBot("white"),
-                minimum_delay=0.1
+                minimum_delay=1
             )
         else:
             print(f"Initializing human vs bot session")
@@ -34,7 +34,7 @@ def run_server(black, white):
                 websocket,
                 is_bot_black,
                 Bot("black" if is_bot_black else "white"),
-                minimum_delay=0.1
+                minimum_delay=1
             )
     address = os.getenv('REACT_APP_IP') if os.getenv('REACT_APP_IP') else 'localhost'
     game_server = websockets.serve(
