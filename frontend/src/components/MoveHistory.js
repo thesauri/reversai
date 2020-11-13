@@ -8,7 +8,8 @@ const MoveHistory = ({ history }) => {
         <div style={{gridColumnStart: '2'}}>Move</div>
         <div style={{gridColumnStart: '3'}}>Time</div>
       </div>
-      {history.map((move, i) => {
+      {history.filter(move => move.move).map((move) => {
+        const position = `${move.move[0]}, ${move.move[1]}`
         return (
           <>
           {
