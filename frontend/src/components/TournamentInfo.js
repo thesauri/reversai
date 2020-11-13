@@ -54,7 +54,7 @@ const TournamentInfo = ({ matchHistory, groups }) => {
 
   const getStandings = (matchHistory, groups) => {
     // Calculate annotations based on previous positions.
-    const prevPoints = getPoints(matchHistory.slice(0, matchHistory.length - 1))
+    const prevPoints = getPoints(matchHistory.slice(0, matchHistory.length - 2))
     const prevStandings = fillInfo(prevPoints, groups)
     const newPoints = getPoints(matchHistory)
     const newStandings = fillInfo(newPoints, groups)
@@ -81,7 +81,7 @@ const TournamentInfo = ({ matchHistory, groups }) => {
   const annotatedStandings = getStandings(matchHistory, groups)
 
   return (
-    <div style={{display: 'inline-grid', margin: '30px'}}>
+    <div style={{display: 'inline-grid'}}>
       {annotatedStandings.map((group, index) => (
         <Group
           standings={group.standings}

@@ -13,25 +13,32 @@ const BotInfo = ({ name, points, annotation, stripe }) => {
   }
 
   return (
-    <div style={{display: 'grid', textAlign: 'center', margins: 'auto', backgroundColor: stripe ? 'white' : '#f0f0f0'}}>
+    <div style={{display: 'grid', width: '100%', backgroundColor: stripe ? 'white' : '#f0f0f0'}}>
       <div style={{
         gridColumnStart: '1',
-        textAlign: 'right'
+        textAlign: 'left',
+        width: '175px',
+        overflow: 'hidden',
+        paddingLeft: '15px',
         }}>
         {name} 
       </div>
       <div style={{
         gridColumnStart: '2',
-        fontWeight: 'bold',
-        textAlign: 'center',
+        textAlign: 'right',
+        width: '20px',
         }}>
-        {points}  
+          {getAnnotation(annotation)}
+        
       </div>
       <div style={{
         gridColumnStart: '3',
-        textAlign: 'left',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        width: '40px',
+        paddingRight: '15px',
         }}>
-      {getAnnotation(annotation)}
+          {points}
       </div>
     </div>
   )

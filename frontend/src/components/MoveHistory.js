@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React from 'react'
 
 const Move = ({ player, position, time }) => {
   const style = {
@@ -24,20 +24,21 @@ const Move = ({ player, position, time }) => {
 
 const MoveHistory = React.forwardRef(({ history }, ref) => {
   const style = {
-    margin: '10px',
-    padding: '10px 0px',
-    height: '695px',
+    margin: '20px',
+    height: '743px',
     width: '200px',
     overflow: 'scroll',
-    background: 'white',
+    background: '#white',
+    boxShadow: '0px 5px 5px #aaa'
   }
   const headerStyle = {
     display: 'grid',
     width: '90%',
-    padding: '0px 10px',
+    padding: '10px',
+    margin: '0px 0px 5px 0px',
     textAlign: 'left',
     fontWeight: 'bold',
-    borderBottom: '1px solid black'
+    background: 'white',
   }
 
   return (

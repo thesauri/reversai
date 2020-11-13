@@ -7,13 +7,13 @@ const Player = ({ player, col, currentPlayer, winner }) => {
     backgroundColor: '#f0f0f0',
     color: '#999',
     padding: '20px 5px 20px 5px',
-    border: '1px solid #ddd',
-    width: '100%'
+    margin: '20px',
+    width: '100%',
+    boxShadow: '0px 5px 5px #aaa'
   }
   if (player.playerColor === currentPlayer) {
     containerStyle = {
       ...containerStyle,
-      border: '1px solid black',
       color: 'black',
       backgroundColor: 'white',
     }

@@ -5,8 +5,11 @@ const Reversi = ({ board, handleClick, currentPlayer, latestPosition, winner }) 
   const style = {
     display: 'inline-grid',
     gridGap: '2px',
-    border: '1px solid #eee',
+    border: '1px solid white',
+    background: 'white',
+    margin: '20px 0px 0px 20px',
     padding: '10px',
+    boxShadow: '0px 5px 5px #aaa'
   }
   const winnerStyle = {
     gridArea: '4 / 1 / 6 / 9',

@@ -4,10 +4,11 @@ import BotInfo from './BotInfo'
 const Group = ({ standings, number }) => {
   const style = {
     gridColumnStart: number,
-    padding: '20px',
-    margin: '20px',
+    padding: '0px 0px 20px 0px',
+    margin: '20px 10px 20px 10px',
     background: 'white',
-    width: '300px',
+    width: '250px',
+    boxShadow: '0px 5px 5px #aaa'
   }
 
   const headerStyle = {
