@@ -11,13 +11,12 @@ function App() {
   const [board, setBoard] = useState(null)
   const [latestPosition, setLatestPosition] = useState([null,null])
   const [winner, setWinner] = useState('')
-
-  const countPieces = () => {
-    return {
-      white: board.count('white'),
-      black: board.count('black')
-    }
-  }
+  const [players, setPlayers] = useState({
+    white: { name: 'Human', author: '' },
+    black: { name: 'Human', author: '' }
+  })
+  const [matchHistory, setMatchHistory] = useState([])
+  const [groups, setGroups] = useState([])
 
   const handleBoardEvent = ({
     matchHistory,
@@ -26,10 +25,13 @@ function App() {
     newBoard,
     turn,
     latestPosition,
-    winner
+    winner,
+    black,
+    white,
   }) => {
     if (matchHistory) {
-      return
+      setMatchHistory(matchHistory)
+      setGroups(groups)
     }
     if (latestPosition) {
       setLatestPosition(latestPosition)
@@ -43,9 +45,14 @@ function App() {
         setBoard(newBoard)
         setCurrentPlayer(turn)
       }, 300)
-    } else {
+    } 
+    if (newBoard) {
       setBoard(newBoard)
       setCurrentPlayer(turn)
+      setPlayers({
+        white: white || { name: 'Human', author: 'God' },
+        black: black || { name: 'Human', author: 'God' }
+      })
     }
   }
   
@@ -55,50 +62,6 @@ function App() {
 
   const [onBoardUpdate, sendEvent] = useWsApi()
   onBoardUpdate.current = handleBoardEvent
-
-  const matchHistory = [
-    {
-      black: {
-        name: 'name1',
-        score: 32,
-      },
-      white: {
-        name: 'name2',
-        score: 31,
-      }
-    },
-    {
-      black: {
-        name: 'name3',
-        score: 22,
-      },
-      white: {
-        name: 'name4',
-        score: 44,
-      }
-    },
-    {
-      black: {
-        name: 'name1',
-        score: 22,
-      },
-      white: {
-        name: 'name2',
-        score: 44,
-      }
-    },
-    {
-      black: {
-        name: 'name1',
-        score: 22,
-      },
-      white: {
-        name: 'name2',
-        score: 44,
-      }
-    },
-  ]
-  const groups = [['name1', 'name2'], ['name3', 'name4']]
 
   return (
     <div style={{display: 'grid'}}>
@@ -111,7 +74,11 @@ function App() {
         latestPosition={latestPosition}
         winner={winner}
         />
-        <PlayerInfo winner={winner} currentPlayer={currentPlayer}/>
+        <PlayerInfo
+          winner={winner}
+          currentPlayer={currentPlayer}
+          players={players}
+        />
       </div>
       <div style={{gridArea: '2 / 2 / 2 / 5'}}>
         <TournamentInfo matchHistory={matchHistory} groups={groups}/>

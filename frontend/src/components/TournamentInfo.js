@@ -1,9 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Group from './Group'
 
 const TournamentInfo = ({ matchHistory, groups }) => {
-  const [botPoints, setBotPoints] = useState({})
-
   const getPoints = (matchHistory) => {
     const bots = {}
 
@@ -61,22 +59,22 @@ const TournamentInfo = ({ matchHistory, groups }) => {
     const newPoints = getPoints(matchHistory)
     const newStandings = fillInfo(newPoints, groups)
   
-  const annotatedStandings = newStandings
-    .map((newGroupStandings, groupIndex) => {
-      const prevGroupStandings = prevStandings[groupIndex].map(b => b.name)
-      return {
-        standings: newGroupStandings.map((bot, botIndex) => {
-          if (prevGroupStandings.includes(bot.name)) {
-            const oldIndex = prevGroupStandings.indexOf(bot.name)
-            if (botIndex !== oldIndex) {
-              bot.annotation = botIndex < oldIndex ? 'up' : 'down'
+    const annotatedStandings = newStandings
+      .map((newGroupStandings, groupIndex) => {
+        const prevGroupStandings = prevStandings[groupIndex].map(b => b.name)
+        return {
+          standings: newGroupStandings.map((bot, botIndex) => {
+            if (prevGroupStandings.includes(bot.name)) {
+              const oldIndex = prevGroupStandings.indexOf(bot.name)
+              if (botIndex !== oldIndex) {
+                bot.annotation = botIndex < oldIndex ? 'up' : 'down'
+              }
             }
-          }
-          return bot
-        }),
-        groupId: groups[groupIndex].reduce((a, b) => a + b)
-      }
-    })
+            return bot
+          }),
+          groupId: groups[groupIndex].reduce((a, b) => a + b)
+        }
+      })
     return annotatedStandings
   }
 
