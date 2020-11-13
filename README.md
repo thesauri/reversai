@@ -41,7 +41,84 @@ Bots are located as `<bot_name>/bot.py` entries of the `backend/reversi/bots/` d
 1. Copy the sample bot folder `oth3ll0grindr2000` and place the copy in the `bots` directory.
 2. Rename the directory to the name of your bot
 3. Write your bot in the `<bot_name>/bot.py` file by implementing the `get_move` method.
-4. Some preselected Python packages are available to use (see `backend/requirements.txt)`. If you want to add some other Python packages, contact the organizers.
+
+Note: **Maximum of 5 seconds of execution time per move allowed**. This is a soft limit, i.e. the bot won't be killed after this time, but execution time is measured and the bot will be disqualified if it takes significantly more time than this. Execution time can be seen both in both the frontend and the Python backend as `Time taken: 0.0 s` log statements.
+
+## Bot helper functions
+Helper functions for game logic have been implemented and we encourage you to use these in in your bot. For instance, you may want to call `is_valid_move` to ensure that a move is valid before returning it or `move` to see what the resulting board state is if you call a certain move. All the function calls are non-mutating, in other words you can safely call `move` without it affecting the actual game state.
+
+The functions are implemented in `reversi.logic`, but have been imported to the sample bot (i.e., you can use them directly without any imports).
+
+The following functions are available:
+
+### is_valid_move
+```
+def is_valid_move(board, turn, position):
+    """
+    Test whether a game move is valid
+
+    board: The game board as a row-column array of "black", "white", or ""
+
+    turn: "black" or "white"
+
+    position: Position as (row_index, column_index)
+
+    Returns: True or False
+    """
+```
+
+### move
+```
+def move(board, turn, position):
+    """
+    Issue a game move
+
+    board: The game board as a row-column array of "black", "white", or ""
+
+    turn: "black" or "white"
+
+    position: Position as (row_index, column_index)
+
+    Returns: A copy of the new game board. None if the move was invalid.""
+```
+
+### playable_moves
+```
+def playable_moves(board, turn):
+    """
+    Get a list of playable moves for a given board and turn
+
+    board: The game board
+
+    turn: The player whose turn it is (black or white)
+
+    Returns: A list of playable moves, e.g. [(5,3), (2,2), (0,1)]
+    """
+```
+
+### has_game_ended
+```
+def has_game_ended(board):
+    """
+    Checks whether the game has ended. A game has ended if neither black nor white can play.
+
+    board: The game board
+
+    Returns: True or False
+    """
+```
+
+### calculate_score
+```
+def calculate_score(board):
+    """
+    Calculate the score for a given board
+
+    board: The board
+
+    Returns: The scores as a named tuple, e.g. Score(black: 5, white: 10). Access the scores with score = calculate_score(board), then score.black and score.white.
+    """
+```
 
 ## Bot submission
 1. On your computer, commit the bot and push it to your forked repository

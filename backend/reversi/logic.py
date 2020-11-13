@@ -78,7 +78,7 @@ def playable_moves(board, turn):
 
     turn: The player whose turn it is (black or white)
 
-    Returns: A list of playable moves, e.g. [(5,3), (2,2, (0,1)]
+    Returns: A list of playable moves, e.g. [(5,3), (2,2), (0,1)]
     """
     moves = []
     for column_index in range(0, 8):
@@ -106,7 +106,7 @@ def calculate_score(board):
 
     board: The board
 
-    Returns: The scores as a named tuple, e.g. Score(black: 5, white: 10). Access the scores with calculate_score(board).black and .white.
+    Returns: The scores as a named tuple, e.g. Score(black: 5, white: 10). Access the scores with score = calculate_score(board), then score.black and score.white.
     """
     black_score = 0
     white_score = 0
