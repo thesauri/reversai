@@ -6,8 +6,9 @@ const Player = ({ player, col, currentPlayer, winner }) => {
     gridColumnStart: col,
     backgroundColor: '#f0f0f0',
     color: '#999',
-    padding: '20px',
-    border: '1px solid #ddd'
+    padding: '20px 5px 20px 5px',
+    border: '1px solid #ddd',
+    width: '100%'
   }
   if (player.playerColor === currentPlayer) {
     containerStyle = {

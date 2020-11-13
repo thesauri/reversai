@@ -5,6 +5,7 @@ import PlayerInfo from './components/PlayerInfo'
 import TournamentInfo from './components/TournamentInfo'
 import Banner from './components/Banner'
 import { useWsApi } from './services/websocket'
+import MoveHistory from './components/MoveHistory'
 
 function App() {
   const [currentPlayer, setCurrentPlayer] = useState('white')
@@ -17,6 +18,7 @@ function App() {
   })
   const [matchHistory, setMatchHistory] = useState([])
   const [groups, setGroups] = useState([])
+  const [moveHistory, setMoveHistory] = useState([])
 
   const handleBoardEvent = ({
     matchHistory,
@@ -28,6 +30,7 @@ function App() {
     winner,
     black,
     white,
+    deltaTime,
   }) => {
     if (matchHistory) {
       setMatchHistory(matchHistory)
@@ -45,6 +48,7 @@ function App() {
         setBoard(newBoard)
         setCurrentPlayer(turn)
       }, 300)
+      setMoveHistory(moveHistory.concat({move: latestPosition, time: deltaTime}))
     } 
     if (newBoard) {
       setBoard(newBoard)
@@ -53,6 +57,9 @@ function App() {
         white: white || { name: 'Human', author: 'God' },
         black: black || { name: 'Human', author: 'God' }
       })
+      setMoveHistory([])
+      setWinner('')
+      setLatestPosition([null,null])
     }
   }
   
@@ -66,7 +73,7 @@ function App() {
   return (
     <div style={{display: 'grid'}}>
       <Banner />
-      <div style={{width: '576px', gridColumnStart: '1'}}>
+      <div style={{width: '576px', gridColumnStart: '1', display: 'grid'}}>
         <Reversi
         board={board}
         handleClick={handleClick}
@@ -74,6 +81,9 @@ function App() {
         latestPosition={latestPosition}
         winner={winner}
         />
+        <div style={{gridColumnStart: '2'}}>
+          <MoveHistory history={moveHistory} />
+        </div>
         <PlayerInfo
           winner={winner}
           currentPlayer={currentPlayer}

@@ -3,7 +3,9 @@ import Player from './Player'
 
 const PlayerInfo = ({ currentPlayer, winner, players }) => {
   const infoBoxStyle = {
-    display: 'grid'
+    display: 'grid',
+    width: '98%',
+    margin: '0px 10px 10px 10px',
   }
   
   return (
