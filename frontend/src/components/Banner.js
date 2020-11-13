@@ -1,17 +1,20 @@
 import React from 'react'
-import logo from '../ReversAI.png';
+import logo from '../reversai.svg';
+import './Gradient.css'
 
 const Banner = () => {
   const bannerStyle = {
     gridArea: '1 / 1 / 1 / 5',
     //textAlign: 'center',
-    padding: '10px',
-    background: '#ddd',
-    borderBottom: '3px solid #ccc',
+    padding: '5px 0px 0px 150px',
+    //background: '#ddd',
   }
   return (
-    <div style={bannerStyle}>
-      <img src={logo} alt="Logo" width='300px'/>
+    <div>
+      <div style={bannerStyle}>
+        <img src={logo} alt="Logo" height='70px'/>
+      </div>
+      <div className='reversai-gradient' style={{position: 'absolute', top: '0px', left: '0px', width: '100%', height: '55px', zIndex: '-1',}}></div>
     </div>
   )
 }

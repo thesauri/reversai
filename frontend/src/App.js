@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import './App.css';
 import Reversi from './components/Reversi'
 import PlayerInfo from './components/PlayerInfo'
@@ -69,6 +69,17 @@ function App() {
     sendEvent({rowIndex, columnIndex})
   }
 
+  // Used for autoscrolling movelist to bottom
+  const bottomRef = useRef()
+  useEffect(() => {
+    if (bottomRef.current !== undefined) {
+      bottomRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      })
+    }
+  }, [moveHistory])
+
   const [onBoardUpdate, sendEvent] = useWsApi()
   onBoardUpdate.current = handleBoardEvent
 
@@ -89,8 +100,8 @@ function App() {
           players={players}
         />
       </div>
-      <div style={{gridArea: '2 / 2 / 2 / 2', textAlign: 'left'}}>
-          <MoveHistory history={moveHistory} />
+      <div style={{gridArea: '2 / 2 / 2 / 2'}}>
+          <MoveHistory history={moveHistory} ref={bottomRef}/>
         </div>
       <div style={{gridArea: '3 / 2 / 3 / 5'}}>
         <TournamentInfo matchHistory={matchHistory} groups={groups}/>
