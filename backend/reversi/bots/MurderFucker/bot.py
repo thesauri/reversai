@@ -47,9 +47,10 @@ class Bot:
         for candidate_move in playable:
             score = 0
             next_board = move(board, self.turns[turn], candidate_move)
-            score += self.traverse_game_tree(next_board, abs(turn - 1), level = 1, max_level = 4)
-            
-            print("Score of move {} is: {}".format(candidate_move, score))
+            #score += self.traverse_game_tree(next_board, abs(turn - 1), level = 1, max_level = 4)
+            score += self.traverse_game_tree_MCE(next_board, abs(turn - 1), level = 1, max_level = 3)
+
+            #print("Score of move {} is: {}".format(candidate_move, score))
             scores.append(score)
 
         return playable[scores.index(max(scores))]
@@ -58,7 +59,7 @@ class Bot:
     # ADD ADDITIONAL CLASS METHODS AS NEEDED
     def traverse_game_tree(self, board, turn, level, max_level = 3):
         #print("Current turn is {}: {}".format(self.turns[turn], turn))
-        if level == max_level:
+        if level >= max_level:
             scores = calculate_score(board)
             if self.color == "black":
                 return scores.black - scores.white 
@@ -71,7 +72,70 @@ class Bot:
 
         for candidate_move in playable:
             next_board = move(board, self.turns[turn], candidate_move)
-            tot_score += self.traverse_game_tree(next_board, abs(turn - 1), level+1, max_level)
+            tot_score += self.traverse_game_tree(next_board, abs(turn - 1), random.randint(level+1, level+2), max_level)
             #print("Total_score is: {}".format(tot_score))
 
         return tot_score
+
+    def traverse_game_tree_MCE(self, board, turn, level, max_level = 3):
+        #print("Current turn is {}: {}".format(self.turns[turn], turn))
+        if level == max_level:
+            score = self.calculate_score_MCE(board, turn)
+            return score
+
+        playable = playable_moves(board, self.turns[turn])
+        #move_scores = {}
+        tot_score = 0
+
+        for candidate_move in playable:
+            next_board = move(board, self.turns[turn], candidate_move)
+            tot_score += self.traverse_game_tree_MCE(next_board, abs(turn - 1), level+1, max_level)
+            #print("Total_score is: {}".format(tot_score))
+
+        return tot_score
+
+    def calculate_score_MCE(self, board, turn):
+        edge_pieces = 0
+        corner_pieces = 0
+
+        playable = len(playable_moves(board, self.turns[turn]))
+
+        for (i, j) in [(0, 0), (0, 7), (7, 0), (7, 7)]:
+            if board[i][j] == self.turns[turn]:
+                corner_pieces += 1
+        
+        for i in [0, 7]:
+            for j in range(1, 7):
+                #print(board[i][j])
+                if board[i][j] == self.turns[turn]:
+                    edge_pieces += 1
+
+        for j in [0, 7]:
+            for i in range(1, 7):
+                if board[i][j] == self.turns[turn]:
+                    edge_pieces += 1
+
+        if board[0][1] == self.turns[turn] and board[0][0] != self.turns[turn]:
+            edge_pieces = 0
+        if board[1][0] == self.turns[turn] and board[0][0] != self.turns[turn]:
+            edge_pieces = 0
+        if board[0][6] == self.turns[turn] and board[0][7] != self.turns[turn]:
+            edge_pieces = 0
+        if board[1][7] == self.turns[turn] and board[0][7] != self.turns[turn]:
+            edge_pieces = 0
+        if board[6][0] == self.turns[turn] and board[7][0] != self.turns[turn]:
+            edge_pieces = 0
+        if board[7][1] == self.turns[turn] and board[7][0] != self.turns[turn]:
+            edge_pieces = 0
+        if board[7][6] == self.turns[turn] and board[7][7] != self.turns[turn]:
+            edge_pieces = 0
+        if board[6][7] == self.turns[turn] and board[7][7] != self.turns[turn]:
+            edge_pieces = 0
+
+        if self.turns[turn] == self.color:
+            return playable + 1.5 * corner_pieces + 0.5 * edge_pieces
+        else:
+            return -(playable + 1.5 * corner_pieces + 0.5 * edge_pieces)
+
+
+
