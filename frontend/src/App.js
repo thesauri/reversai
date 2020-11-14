@@ -116,6 +116,11 @@ function App() {
         </div>
       <div style={{gridArea: '2 / 3 / 2 / 5'}}>
         <TournamentInfo matchHistory={matchHistory} groups={groups} playingTeams={playingTeams} />
+        <button onClick={() => {
+          sendEvent({ "action": "start_next_match" })
+        }}>
+          Start next match
+        </button>
       </div>
     </div>
   );

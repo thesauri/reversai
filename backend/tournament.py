@@ -16,19 +16,26 @@ def play_tournament(matches_file, history_file_path):
     black_team = None
     white_team = None
     connected_websockets = set()
+    next_match_semaphore = asyncio.BoundedSemaphore(value=1)
 
     async def websocket_request_handler(websocket, path):
         connected_websockets.add(websocket)
         print("Websocket connection!")
         try:
             await __send_tournament_state(websocket, history.history, matches["groups"], black_team, white_team)
-            async for message in websocket:
-                print(message)
+            async for message_string in websocket:
+                message = json.loads(message_string)
+                if message["action"] == "start_next_match":
+                    try:
+                        next_match_semaphore.release()
+                    except ValueError:
+                        print("Cannot start next game, game still in progress")
         finally:
-            connected.remove(websocket)
+            connected_websockets.remove(websocket)
             print("Websocket disconnected")
 
     async def play_games():
+        await next_match_semaphore.acquire()
         for match_index, match in enumerate(matches['matches']):
             group_index = match["group"]
             black_team = match["players"][0]
@@ -39,6 +46,9 @@ def play_tournament(matches_file, history_file_path):
             for websocket in connected_websockets:
                 print("Broadcasting tournament state")
                 await __send_tournament_state(websocket, history.history, matches["groups"], black_team, white_team)
+
+            print("Waiting for the next match to be started")
+            await next_match_semaphore.acquire()
 
             print(f"Group {group_index} match {match_index}: black {black_team} ({black_bot_name}) vs white: {white_team} ({white_bot_name})")
             score = await __play_tournament_game(list(connected_websockets), black_bot_name, white_bot_name)
