@@ -26,7 +26,7 @@ corners = np.array([
 ])
 
 
-MAXTIME = 5.0
+MAXTIME = 4.8
 
 class Bot:
     """
@@ -221,6 +221,8 @@ class Bot:
         #ret = self.minimax(board, max_depth, self.color, current_turn)
         best_move = ret[1]
         
+    
+
         return best_move
 
     # ADD ADDITIONAL CLASS METHODS AS NEEDED
