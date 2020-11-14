@@ -34,9 +34,26 @@ class Bot:
         self.name = "TheSexNumber"
         self.author = "H3mp and Beppu"
         self.color = color
+        self.enemy_color = ""
+        if color == "white":
+          self.enemy_color = "black"
+        else:
+          self.enemy_color = "white"
+
+
+    def color_value(self, input):
+      if input == self.color:
+        return 1
+      elif input == self.enemy_color:
+        return -1
+      return 0
 
     def calculate_board_weight(self, board):
-      return sum([ i * j for i,j in zip(board_weights, board) ])
+      sum = 0
+      for i in range(0,7):
+        for j in range(0,7):
+          sum += color_value(board_weights[i][j]) * color_value(board[i][j])
+
 
 
     def get_move(self, board):
@@ -58,9 +75,7 @@ class Bot:
           if move_value > best_move_value:
             best_move_value = move_value
             best_move = move
-            
-
-
+        
         return best_move
 
     # ADD ADDITIONAL CLASS METHODS AS NEEDED
