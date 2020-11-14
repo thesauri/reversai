@@ -12,26 +12,26 @@ def play_tournament(matches_file, history_file_path):
     history = History(history_file_path)
 
     async def play_games():
-        for group_index, group in matches['group_matches'].items():
-            for match_index, match in enumerate(group):
-                black_team = match[0]
-                black_bot_name = matches['teams'][black_team]
-                white_team = match[1]
-                white_bot_name = matches['teams'][white_team]
+        for match_index, match in enumerate(matches['matches']):
+            group_index = match["group"]
+            black_team = match["players"][0]
+            black_bot_name = matches['teams'][black_team]
+            white_team = match["players"][1]
+            white_bot_name = matches['teams'][white_team]
 
-                print(f"Group {group_index} match {match_index}: black {black_team} ({black_bot_name}) vs white: {white_team} ({white_bot_name})")
-                score = await __play_tournament_game(black_bot_name, white_bot_name)
-                game = {
-                    "black": {
-                        "name": black_team,
-                        "score": score.black
-                    },
-                    "white": {
-                        "name": white_team,
-                        "score": score.white
-                    }
+            print(f"Group {group_index} match {match_index}: black {black_team} ({black_bot_name}) vs white: {white_team} ({white_bot_name})")
+            score = await __play_tournament_game(black_bot_name, white_bot_name)
+            game = {
+                "black": {
+                    "name": black_team,
+                    "score": score.black
+                },
+                "white": {
+                    "name": white_team,
+                    "score": score.white
                 }
-                history.add_game(game)
+            }
+            history.add_game(game)
 
     asyncio.get_event_loop().run_until_complete(play_games())
 
@@ -51,16 +51,28 @@ def generate_tournament(configuration_file):
     configuration = json.load(open(configuration_file, "r"))
     __verify_configuration(configuration)
 
-    matches = {
-        'teams': configuration['teams'],
-        'groups': configuration['groups'],
-        'group_matches': {}
-    }
+    group_matches = {}
+
     for group_index, group in enumerate(configuration['groups']):
         match_order = __randomized_match_order(group)
-        matches['group_matches'][group_index] = match_order
+        group_matches[group_index] = match_order
 
-    print(json.dumps(matches))
+    matches = []
+    for i in range(0, len(group_matches[0])):
+        for group_index in group_matches.keys():
+            match = {
+                "group": group_index,
+                "players": group_matches[group_index][i]
+            }
+            matches.append(match)
+
+    match_configuration = {
+        'teams': configuration['teams'],
+        'groups': configuration['groups'],
+        'matches': matches
+    }
+
+    print(json.dumps(match_configuration))
 
 def __verify_configuration(configuration):
     def verify_bot_existance(configuration):
