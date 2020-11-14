@@ -14,6 +14,10 @@ function App() {
   const [board, setBoard] = useState(null)
   const [latestPosition, setLatestPosition] = useState([null,null])
   const [winner, setWinner] = useState('')
+  const [score, setScore] = useState({
+    black: "-",
+    white: "-"
+  })
   const [players, setPlayers] = useState({
     white: { name: 'Human', author: '' },
     black: { name: 'Human', author: '' }
@@ -39,6 +43,7 @@ function App() {
     black,
     white,
     deltaTime,
+    score
   }) => {
     if (matchHistory) {
       setMatchHistory(matchHistory)
@@ -58,7 +63,7 @@ function App() {
       setTimeout(() => {
         setBoard(newBoard)
         setCurrentPlayer(turn)
-      }, 250)
+      }, 400)
       setMoveHistory(moveHistory.concat(
         {move: latestPosition, time: deltaTime, player: turn === 'white' ? 'black' : 'white'}))
     } else if (newBoard) {
@@ -73,6 +78,12 @@ function App() {
       setMoveHistory([])
       setWinner('')
       setLatestPosition([null,null])
+    }
+    if (score) {
+      setScore({
+        black: score[0],
+        white: score[1]
+      })
     }
   }
   
@@ -99,16 +110,17 @@ function App() {
       <Banner />
       <div style={{width: '576px', gridColumnStart: '1'}}>
         <Reversi
-        board={board}
-        handleClick={handleClick}
-        currentPlayer={currentPlayer}
-        latestPosition={latestPosition}
-        winner={winner}
+          board={board}
+          handleClick={handleClick}
+          currentPlayer={currentPlayer}
+          latestPosition={latestPosition}
+          winner={winner}
         />
         <PlayerInfo
           winner={winner}
           currentPlayer={currentPlayer}
           players={players}
+          score={score}
         />
       </div>
       <div style={{gridArea: '2 / 2 / 2 / 2'}}>

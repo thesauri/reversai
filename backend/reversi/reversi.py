@@ -186,7 +186,8 @@ async def human_vs_human_session(websocket):
 async def __send_game_state(websockets, board, next_turn, black_bot=None, white_bot=None, previous_action=None, delta_time=None, headless=False):
     game_state = {
         "newBoard": board,
-        "turn": next_turn
+        "turn": next_turn,
+        "score": calculate_score(board)
     }
     if previous_action != None:
         intermediate_board = deepcopy(previous_action.old_board)

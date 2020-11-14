@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Player = ({ player, col, currentPlayer, winner }) => {
+const Player = ({ player, col, currentPlayer, winner, score }) => {
   let containerStyle = {
     textAlign: 'center',
     gridColumnStart: col,
@@ -31,6 +31,7 @@ const Player = ({ player, col, currentPlayer, winner }) => {
 
   return (
     <div style={containerStyle}>
+      <h2 style={headerStyle}>{score}</h2>
       <h2 style={headerStyle}>{player.playerColor.toUpperCase()}</h2>
       <div>{player.name}</div>
       <div>Made by {player.author}</div>

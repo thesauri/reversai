@@ -83,7 +83,7 @@ async def __play_tournament_game(websockets, black_bot_name, white_bot_name):
         websockets,
         BlackBot("black"),
         WhiteBot("white"),
-        minimum_delay=0.5
+        minimum_delay=1
     )
     return score
 
