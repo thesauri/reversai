@@ -1,6 +1,8 @@
 # ReversAI
 Environment to develop bots for [Reversi](https://en.wikipedia.org/wiki/Reversi).
 
+![ReversAI logo](logo.png)
+
 ## Structure
 Bots are implemented in Python.
 
