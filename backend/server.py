@@ -23,7 +23,7 @@ def run_server(black, white):
                 websocket,
                 BlackBot("black"),
                 WhiteBot("white"),
-                minimum_delay=1
+                minimum_delay=0
             )
         else:
             print(f"Initializing human vs bot session")

@@ -37,7 +37,7 @@ def move(board, turn, position):
 
     Returns: A copy of the new game board. None if the move was invalid."""
     board = deepcopy(board)
-
+    
     is_out_of_bounds = \
         (position[0] > 7 or position[1] > 7) or \
         (position[0] < 0 or position[1] < 0)
