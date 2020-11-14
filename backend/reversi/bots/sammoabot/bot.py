@@ -133,10 +133,10 @@ class Bot:
         score = calculate_score(board)
         placed_discs = score.white + score.black
         weights = {
-            'disc_difference': placed_discs / 64 if placed_discs < 50 else 1,
-            'mobility': 1 - placed_discs / 64 if placed_discs < 50 else 0,
+            'disc_difference': placed_discs / 84 if placed_discs < 54 else 1,
+            'mobility': 1 - placed_discs / 84 if placed_discs < 54 else 0,
             # Penalize certain positions
-            'position': board_weights[position[0]][position[1]],
+            'position': board_weights[position[0]][position[1]] if placed_discs < 54 else 1,
         }
         #return weights['position']
         return weights['position'] * (
@@ -176,9 +176,8 @@ class Bot:
                     value, _ = minimax(depth - 1, new_board, position, a, b, self.opponent)
                     if value > best_value:
                         if depth == max_depth:
-                            if len(moves) == 1 or not board_weights[position[0]][position[1]] == 0:
-                                best_value = value
-                                best_position = position
+                            score = calculate_score(board)
+                            placed_discs = score.white + score.black
                     a = max(best_value, a)
                     self.searched_boards[current_player][str(board)] = (best_value, best_position)
                     if a >= b:
@@ -211,7 +210,7 @@ class Bot:
                     if a >= b:
                         break
                 return best_value, best_position 
-        max_depth = 4
+        max_depth = 2
 
         start_time = time.time()
         best_value, best_position = minimax(max_depth, board, None, float('-inf'), float('inf'), self.color)
