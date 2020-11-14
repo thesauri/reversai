@@ -8,7 +8,7 @@ const Move = ({ player, position, time }) => {
     textAlign: 'left',
     backgroundColor: player === 'white' ? '#fff' : '#99d3cb',
   }
-  if (time > 10) {
+  if (time > 5) {
     style.color = '#c73029'
     style.fontWeight = 'bold'
   }
