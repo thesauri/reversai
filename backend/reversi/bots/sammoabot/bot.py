@@ -2,17 +2,23 @@ import random
 from ...logic import is_valid_move, move, playable_moves, has_game_ended, calculate_score
 from copy import deepcopy
 import time
+import random
+import pickle
 
+SAVE_MOVES = False
+FILENAME = 'precalc_moves.pickle'
 board_weights = [
-    [1.0, -1., 0.5, 0.5, 0.5, 0.5, -1., 1.0],
-    [-1., -1., 0.0, 0.0, 0.0, 0.0, -1., -1.],
-    [0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5],
-    [0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5],
-    [0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5],
-    [0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5],
-    [-1., -1., 0.0, 0.0, 0.0, 0.0, -1., -1.],
-    [1.0, -1., 0.5, 0.5, 0.5, 0.5, -1., 1.0],
+    [1.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, 1.0],
+    [0.0, 0.0, 0.1, 0.1, 0.1, 0.1, 0.0, 0.0],
+    [0.7, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.7],
+    [0.5, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.5],
+    [0.5, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.5],
+    [0.7, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.7],
+    [0.0, 0.0, 0.1, 0.1, 0.1, 0.1, 0.0, 0.0],
+    [1.0, 0.0, 0.5, 0.5, 0.5, 0.5, 0.0, 1.0],
 ]
+
+corners = [(0,0), (0,7), (7,0), (7,7)]
 
 # Helper functions
 def get_winner(board):
@@ -75,6 +81,14 @@ class Bot:
         self.searched_boards = {'white': {}, 'black': {}}
         self.board_lookups = 0
 
+    def load_moves(self):
+        try:
+            with open(FILENAME, 'rb') as f:
+                searched_boards = pickle.load(f)
+            return searched_boards
+        except:
+            return {'white': {}, 'black': {}} 
+
     def get_move(self, board):
         """
         Called by the game to get a move based on the given game board
@@ -86,7 +100,13 @@ class Bot:
         Returns: The position to place the disc on as a tuple (row_index, column_index), i.e. (7, 2) for row 7 and column 2. Note that the position *has* to be valid (otherwise the game server will throw an error). Use the is_valid_move from reversi/logic to test whether a move is valid or not.
         """
         the_move = self.minimax_search(board)
-        print(f'{self.board_lookups} board lookups made')
+        if not the_move:
+            the_move = playable_moves(board, self.color)[0]
+
+        if SAVE_MOVES:
+            with open(FILENAME, 'wb') as f:
+                pickle.dump(self.searched_boards, f)
+
         return the_move
         
     # Number of moves available to player vs moves available to opponent
@@ -113,22 +133,22 @@ class Bot:
         score = calculate_score(board)
         placed_discs = score.white + score.black
         weights = {
-            'disc_difference': placed_discs / 64,
-            'mobility': 1 - placed_discs / 64
+            'disc_difference': placed_discs / 64 if placed_discs < 50 else 1,
+            'mobility': 1 - placed_discs / 64 if placed_discs < 50 else 0,
+            # Penalize certain positions
+            'position': board_weights[position[0]][position[1]],
         }
-        return board_weights[position[0]][position[1]] * (
+        #return weights['position']
+        return weights['position'] * (
             weights['disc_difference'] * self.disc_difference(board) +
             weights['mobility'] * self.mobility(board)
         )
 
     def minimax_search(self, board):
-
-        def minimax(depth, board, position, a, b, current_player):
-            if time.time() - start_time > 4.9:
-                print('ran out off time...')
-                value = self.evaluate(board, position)
-                self.searched_boards[current_player][str(board)] = (value, position)
-                return value, position
+        def minimax(depth, board, pos, a, b, current_player):
+            if time.time() - start_time > 4.6:
+                value = self.evaluate(board, pos)
+                return value, None
 
             if str(board) in self.searched_boards[current_player]:
                 self.board_lookups += 1
@@ -142,31 +162,45 @@ class Bot:
                     return value, reverse_symmetry(altered_position)
 
             if has_game_ended(board) or depth == 0:
-                value = self.evaluate(board, position)
-                self.searched_boards[current_player][str(board)] = (value, position)
-                return value, position
+                value = self.evaluate(board, pos)
+                return value, None
             
             if current_player == self.color:
                 best_value = float('-inf')
                 best_position = None
                 
-                for position in playable_moves(board, current_player):
+                moves = playable_moves(board, current_player)
+                random.shuffle(moves)
+                for position in moves:
                     new_board = move(board, current_player, position)
                     value, _ = minimax(depth - 1, new_board, position, a, b, self.opponent)
                     if value > best_value:
-                        best_value = value
-                        best_position = position
+                        if depth == max_depth:
+                            if len(moves) == 1 or not board_weights[position[0]][position[1]] == 0:
+                                best_value = value
+                                best_position = position
                     a = max(best_value, a)
                     self.searched_boards[current_player][str(board)] = (best_value, best_position)
                     if a >= b:
                         break
+                
+                if depth == max_depth:
+                    score = calculate_score(board)
+                    placed_discs = score.white + score.black
+                    if placed_discs < 59:
+                        for corner in corners:
+                            if corner in moves:
+                                best_position = corner
+
                 return best_value, best_position
 
             else:
                 best_value = float('inf')
                 best_position = None
 
-                for position in playable_moves(board, current_player):
+                moves = playable_moves(board, current_player)
+                random.shuffle(moves)
+                for position in moves:
                     new_board = move(board, current_player, position)
                     value, _ = minimax(depth - 1, new_board, position, a, b, self.color)
                     if value < best_value:
@@ -178,14 +212,22 @@ class Bot:
                         break
                 return best_value, best_position 
         max_depth = 4
-        searched_moves = {}
+
         start_time = time.time()
         best_value, best_position = minimax(max_depth, board, None, float('-inf'), float('inf'), self.color)
-        if not best_position:
+        if not best_position or not is_valid_move(board, self.color, best_position):
+            if best_position and not is_valid_move(board, self.color, best_position):
+                print('Not valid move played')
+                print(best_position)
+            else:
+                print('could not find position')
             best_value = float('-inf')
             for position in playable_moves(board, self.color):
-                value = evaluate(move(board, current_player, position))
+                value = self.evaluate(move(board, self.color, position), position)
                 if value > best_value:
                     best_value = value
                     best_position = position
+        
         return best_position
+
+        
