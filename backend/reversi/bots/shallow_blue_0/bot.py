@@ -15,10 +15,23 @@ class Bot:
         # Initialize your bot here
         # Name, author, and have to be set
         # Feel free to add your own instance variables
-        self.name = "0th3ll0GRINDR2000"
-        self.author = "wotlol u sammoa"
+        self.name = "Shallow Blue Beta"
+        self.author = "Max Ulfves"
         self.color = color
 
+    def moves(self, board):
+        candidates = set()
+        opCol = "white"
+        for row in range(0, 7):
+            for col in range(0,7):
+                if board[row][col] == opCol:
+                    #foreach surrounding tile
+                    for rn in range(max(row - 1, 0), min(row + 2, 7)):
+                        for cn in range(max(col - 1, 0), min(col + 2, 7)):
+                            position = (rn, cn)
+                            if board[rn][cn] == "" and is_valid_move(board, self.color, position) :
+                                candidates.add( position )
+        return candidates
 
     def get_move(self, board):
         """
@@ -31,11 +44,19 @@ class Bot:
         Returns: The position to place the disc on as a tuple (row_index, column_index), i.e. (7, 2) for row 7 and column 2. Note that the position *has* to be valid (otherwise the game server will throw an error). Use the is_valid_move from reversi/logic to test whether a move is valid or not.
         """
         # REMOVE THIS AND ADD YOUR OWN CODE HERE
-        while True:
-            row_index = random.randint(0, 7)
-            column_index = random.randint(0, 7)
-            position = (row_index, column_index)
-            if is_valid_move(board, self.color, position):
-                return position
+
+        candidates = playable_moves(board, self.color)
+        
+        bestCandidate = candidates[0]
+        score = calculate_score(move(board, self.color, bestCandidate))
+
+        for c in candidates:
+            myScore = calculate_score(move(board, self.color, bestCandidate))
+            if myScore > score:
+                bestCandidate = c
+                score = myScore
+
+        return bestCandidate
+
 
     # ADD ADDITIONAL CLASS METHODS AS NEEDED

@@ -15,10 +15,36 @@ class Bot:
         # Initialize your bot here
         # Name, author, and have to be set
         # Feel free to add your own instance variables
-        self.name = "0th3ll0GRINDR2000"
-        self.author = "wotlol u sammoa"
+        self.name = "Shallow Blue"
+        self.author = "Max Ulfves"
         self.color = color
 
+    def opponent(self):
+        return "black" if self.color == "white" else "white"
+
+    def evalScore(self, board):
+        score =  calculate_score(board)
+        
+        #numeric = (score.black - score.white) if self.color == "white" else (score.white - score.black)
+
+        candidates = playable_moves(board, self.opponent() )
+
+        bestCandidate = False
+        score = 10000000
+
+        for c in candidates:
+            myScore = calculate_score(move(board, self.opponent(), c))
+            numeric = (myScore.black - myScore.white) if self.color == "black" else (myScore.white - myScore.black)
+
+            print("num: " , numeric)
+            if numeric < score:
+                bestCandidate = c
+                score = numeric
+        
+
+        print("SCORE: " , score)
+        return score
+        
 
     def get_move(self, board):
         """
@@ -30,12 +56,11 @@ class Bot:
 
         Returns: The position to place the disc on as a tuple (row_index, column_index), i.e. (7, 2) for row 7 and column 2. Note that the position *has* to be valid (otherwise the game server will throw an error). Use the is_valid_move from reversi/logic to test whether a move is valid or not.
         """
-        # REMOVE THIS AND ADD YOUR OWN CODE HERE
-        while True:
-            row_index = random.randint(0, 7)
-            column_index = random.randint(0, 7)
-            position = (row_index, column_index)
-            if is_valid_move(board, self.color, position):
-                return position
 
-    # ADD ADDITIONAL CLASS METHODS AS NEEDED
+        candidates = playable_moves(board, self.color)
+
+        def func(c):
+             return self.evalScore(move(board, self.color, c))
+
+        return max(candidates, key =  func)
+

@@ -14,6 +14,7 @@ async def bot_vs_bot_session(websocket, black_bot, white_bot, minimum_delay=3, h
     previous_action = None
     await __send_game_state(websocket, board, turn, black_bot=black_bot, white_bot=white_bot, headless=headless)
     await asyncio.sleep(minimum_delay)
+    
 
     while True:
         print(f"{turn}'s turn to play")
@@ -40,6 +41,7 @@ async def bot_vs_bot_session(websocket, black_bot, white_bot, minimum_delay=3, h
         )
 
         if is_win:
+            print("FINAL SCORE: ", calculate_score(board))
             break
         await asyncio.sleep(minimum_delay)
 
