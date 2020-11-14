@@ -16,8 +16,8 @@ class Bot:
         # Initialize your bot here
         # Name, author, and have to be set
         # Feel free to add your own instance variables
-        self.name = "0th3ll0GRINDR2000"
-        self.author = "wotlol u sammoa"
+        self.name = "NotTheWInner"
+        self.author = "Robin"
         self.color = color
 
     def get_move(self, board):
