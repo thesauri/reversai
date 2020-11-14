@@ -5,14 +5,15 @@ from datetime import datetime
 from .logic import move, default_game_board, is_valid_move, playable_moves, calculate_score, has_game_ended
 from .printing import print_board
 import json
+import websockets as ws
 
 PreviousAction = namedtuple("PreviousAction", "old_board turn position")
 
-async def bot_vs_bot_session(websocket, black_bot, white_bot, minimum_delay=3, headless=False):
+async def bot_vs_bot_session(websockets, black_bot, white_bot, minimum_delay=3, headless=False):
     board = default_game_board()
     turn = "black"
     previous_action = None
-    await __send_game_state(websocket, board, turn, black_bot=black_bot, white_bot=white_bot, headless=headless)
+    await __send_game_state(websockets, board, turn, black_bot=black_bot, white_bot=white_bot, headless=headless)
     await asyncio.sleep(minimum_delay)
 
     while True:
@@ -29,7 +30,7 @@ async def bot_vs_bot_session(websocket, black_bot, white_bot, minimum_delay=3, h
         is_win = has_game_ended(board)
 
         await __send_game_state(
-            websocket,
+            websockets,
             board,
             turn,
             black_bot=black_bot,
@@ -44,7 +45,7 @@ async def bot_vs_bot_session(websocket, black_bot, white_bot, minimum_delay=3, h
         await asyncio.sleep(minimum_delay)
 
     print("Game over!")
-    await __send_win_state(websocket, board, turn, previous_action, headless=headless)
+    await __send_win_state(websockets, board, turn, previous_action, headless=headless)
     score = calculate_score(board)
     return score
 
@@ -53,7 +54,8 @@ async def human_vs_bot_session(websocket, is_bot_first, bot, minimum_delay=3):
     turn = "black"
     previous_action = None
 
-    await __send_game_state(websocket,
+    await __send_game_state(
+        websocket,
         board,
         turn,
         black_bot=bot if is_bot_first else None,
@@ -181,7 +183,7 @@ async def human_vs_human_session(websocket):
     await __send_win_state(websocket, board, turn, previous_action)
 
 
-async def __send_game_state(websocket, board, next_turn, black_bot=None, white_bot=None, previous_action=None, delta_time=None, headless=False):
+async def __send_game_state(websockets, board, next_turn, black_bot=None, white_bot=None, previous_action=None, delta_time=None, headless=False):
     game_state = {
         "newBoard": board,
         "turn": next_turn
@@ -208,7 +210,14 @@ async def __send_game_state(websocket, board, next_turn, black_bot=None, white_b
         print_board(board)
     else:
         stringified_game_state = json.dumps(game_state)
-        await websocket.send(stringified_game_state)
+        if isinstance(websockets, list):
+            for websocket in websockets:
+                try:
+                    await websocket.send(stringified_game_state)
+                except ws.exceptions.ConnectionClosedError:
+                    pass
+        else:
+            await websockets.send(stringified_game_state)
 
 def __get_move_with_delta_time(bot, board):
     time_before = datetime.now()
@@ -221,7 +230,7 @@ def __get_move_with_delta_time(bot, board):
 def __delta_time_in_seconds(time_before, time_after):
     return (time_after - time_before).seconds + round((time_after - time_before).microseconds / 1000000, 2)
 
-async def __send_win_state(websocket, board, turn, previous_action, headless=False):
+async def __send_win_state(websockets, board, turn, previous_action, headless=False):
     intermediate_board = deepcopy(previous_action.old_board)
     intermediate_board[previous_action.position[0]][previous_action.position[1]] = previous_action.turn
 
@@ -239,7 +248,14 @@ async def __send_win_state(websocket, board, turn, previous_action, headless=Fal
         print(f"The winner is: {winner}")
     else:
         stringified_win_state = json.dumps(win_state)
-        await websocket.send(stringified_win_state)
+        if isinstance(websockets, list):
+            for websocket in websockets:
+                try:
+                    await websocket.send(stringified_win_state)
+                except ws.exceptions.ConnectionClosedError:
+                    pass
+        else:
+            await websockets.send(stringified_game_state)
 
 
 def __raise_exception_on_invalid_move(new_board):

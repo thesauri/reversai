@@ -6,10 +6,25 @@ import json
 import os.path
 import random
 from reversi.reversi import bot_vs_bot_session
+import websockets
+
+WEBSOCKET_PORT = 8008
 
 def play_tournament(matches_file, history_file_path):
     matches = json.load(open(matches_file, "r"))
     history = History(history_file_path)
+    connected_websockets = set()
+
+    async def websocket_request_handler(websocket, path):
+        connected_websockets.add(websocket)
+        print("Websocket connection!")
+        try:
+            await __send_tournament_state(websocket, history.history, matches["groups"])
+            async for message in websocket:
+                print(message)
+        finally:
+            connected.remove(websocket)
+            print("Websocket disconnected")
 
     async def play_games():
         for match_index, match in enumerate(matches['matches']):
@@ -20,7 +35,7 @@ def play_tournament(matches_file, history_file_path):
             white_bot_name = matches['teams'][white_team]
 
             print(f"Group {group_index} match {match_index}: black {black_team} ({black_bot_name}) vs white: {white_team} ({white_bot_name})")
-            score = await __play_tournament_game(black_bot_name, white_bot_name)
+            score = await __play_tournament_game(list(connected_websockets), black_bot_name, white_bot_name)
             game = {
                 "black": {
                     "name": black_team,
@@ -32,18 +47,27 @@ def play_tournament(matches_file, history_file_path):
                 }
             }
             history.add_game(game)
+            for websocket in connected_websockets:
+                print("Broadcasting tournament state")
+                await __send_tournament_state(websocket, history.history, matches["groups"])
 
+    address = os.getenv('REACT_APP_IP') if os.getenv('REACT_APP_IP') else 'localhost'
+    game_server = websockets.serve(
+        websocket_request_handler,
+        address,
+        WEBSOCKET_PORT
+    )
+    asyncio.get_event_loop().run_until_complete(game_server)
     asyncio.get_event_loop().run_until_complete(play_games())
 
-async def __play_tournament_game(black_bot_name, white_bot_name):
+async def __play_tournament_game(websockets, black_bot_name, white_bot_name):
     BlackBot = get_bot(black_bot_name)
     WhiteBot = get_bot(white_bot_name)
     score = await bot_vs_bot_session(
-        None,
+        websockets,
         BlackBot("black"),
         WhiteBot("white"),
-        minimum_delay=0,
-        headless=True
+        minimum_delay=0.5
     )
     return score
 
@@ -73,6 +97,17 @@ def generate_tournament(configuration_file):
     }
 
     print(json.dumps(match_configuration))
+
+async def __send_tournament_state(websocket, match_history, groups):
+    tournament_state = {
+        "matchHistory": match_history,
+        "groups": groups
+    }
+    try:
+        await websocket.send(json.dumps(tournament_state))
+    except websockets.exceptions.ConnectionClosedError:
+        pass
+
 
 def __verify_configuration(configuration):
     def verify_bot_existance(configuration):
