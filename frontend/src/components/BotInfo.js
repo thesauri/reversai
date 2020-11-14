@@ -1,7 +1,7 @@
 import React from 'react'
 import { FaCaretUp, FaCaretDown } from 'react-icons/fa'
 
-const BotInfo = ({ name, points, annotation, stripe }) => {
+const BotInfo = ({ name, points, annotation, stripe, isPlaying }) => {
   const getAnnotation = (annotation) => {
     if (annotation) {
       return annotation === 'up' ?
@@ -13,7 +13,11 @@ const BotInfo = ({ name, points, annotation, stripe }) => {
   }
 
   return (
-    <div style={{display: 'grid', width: '100%', backgroundColor: stripe ? 'white' : '#f0f0f0'}}>
+    <div style={{
+      display: 'grid',
+      width: '100%',
+      backgroundColor: isPlaying ? "#e0923c" : (stripe ? 'white' : '#f0f0f0')
+    }}>
       <div style={{
         gridColumnStart: '1',
         textAlign: 'left',

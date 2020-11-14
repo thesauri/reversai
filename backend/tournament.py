@@ -13,13 +13,15 @@ WEBSOCKET_PORT = 8008
 def play_tournament(matches_file, history_file_path):
     matches = json.load(open(matches_file, "r"))
     history = History(history_file_path)
+    black_team = None
+    white_team = None
     connected_websockets = set()
 
     async def websocket_request_handler(websocket, path):
         connected_websockets.add(websocket)
         print("Websocket connection!")
         try:
-            await __send_tournament_state(websocket, history.history, matches["groups"])
+            await __send_tournament_state(websocket, history.history, matches["groups"], black_team, white_team)
             async for message in websocket:
                 print(message)
         finally:
@@ -33,6 +35,10 @@ def play_tournament(matches_file, history_file_path):
             black_bot_name = matches['teams'][black_team]
             white_team = match["players"][1]
             white_bot_name = matches['teams'][white_team]
+
+            for websocket in connected_websockets:
+                print("Broadcasting tournament state")
+                await __send_tournament_state(websocket, history.history, matches["groups"], black_team, white_team)
 
             print(f"Group {group_index} match {match_index}: black {black_team} ({black_bot_name}) vs white: {white_team} ({white_bot_name})")
             score = await __play_tournament_game(list(connected_websockets), black_bot_name, white_bot_name)
@@ -49,7 +55,7 @@ def play_tournament(matches_file, history_file_path):
             history.add_game(game)
             for websocket in connected_websockets:
                 print("Broadcasting tournament state")
-                await __send_tournament_state(websocket, history.history, matches["groups"])
+                await __send_tournament_state(websocket, history.history, matches["groups"], black_team, white_team)
 
     address = os.getenv('REACT_APP_IP') if os.getenv('REACT_APP_IP') else 'localhost'
     game_server = websockets.serve(
@@ -98,10 +104,12 @@ def generate_tournament(configuration_file):
 
     print(json.dumps(match_configuration))
 
-async def __send_tournament_state(websocket, match_history, groups):
+async def __send_tournament_state(websocket, match_history, groups, black_team, white_team):
     tournament_state = {
         "matchHistory": match_history,
-        "groups": groups
+        "groups": groups,
+        "blackTeam": black_team,
+        "whiteTeam": white_team
     }
     try:
         await websocket.send(json.dumps(tournament_state))

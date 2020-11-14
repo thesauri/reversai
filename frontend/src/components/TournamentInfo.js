@@ -1,7 +1,7 @@
 import React from 'react'
 import Group from './Group'
 
-const TournamentInfo = ({ matchHistory, groups }) => {
+const TournamentInfo = ({ matchHistory, groups, playingTeams }) => {
   const getPoints = (matchHistory) => {
     const bots = {}
 
@@ -84,6 +84,7 @@ const TournamentInfo = ({ matchHistory, groups }) => {
     <div style={{display: 'inline-grid'}}>
       {annotatedStandings.map((group, index) => (
         <Group
+          playingTeams={playingTeams}
           standings={group.standings}
           key={group.groupId}
           number={index+1}

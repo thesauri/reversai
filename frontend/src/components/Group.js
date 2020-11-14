@@ -1,7 +1,7 @@
 import React from 'react'
 import BotInfo from './BotInfo'
 
-const Group = ({ standings, number }) => {
+const Group = ({ standings, number, playingTeams }) => {
   const style = {
     gridColumnStart: number,
     padding: '0px 0px 20px 0px',
@@ -23,6 +23,7 @@ const Group = ({ standings, number }) => {
         <BotInfo 
           key={bot.name}
           name={bot.name}
+          isPlaying={[playingTeams.blackTeam, playingTeams.whiteTeam].includes(bot.name)}
           points={bot.points}
           annotation={bot.annotation}
           stripe={i%2===1}

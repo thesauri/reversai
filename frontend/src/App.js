@@ -18,12 +18,18 @@ function App() {
     white: { name: 'Human', author: '' },
     black: { name: 'Human', author: '' }
   })
+  const [playingTeams, setPlayingTeams] = useState({
+    blackTeam: null,
+    whiteTeam: null
+  })
   const [matchHistory, setMatchHistory] = useState(mockGames)
   const [groups, setGroups] = useState(mockGroups)
   const [moveHistory, setMoveHistory] = useState([])
 
   const handleBoardEvent = ({
     matchHistory,
+    blackTeam,
+    whiteTeam,
     groups,
     intermediateBoard,
     newBoard,
@@ -37,6 +43,9 @@ function App() {
     if (matchHistory) {
       setMatchHistory(matchHistory)
       setGroups(groups)
+    }
+    if (blackTeam && whiteTeam) {
+      setPlayingTeams({ blackTeam, whiteTeam })
     }
     if (latestPosition) {
       setLatestPosition(latestPosition)
@@ -106,7 +115,7 @@ function App() {
           <MoveHistory history={moveHistory} ref={bottomRef}/>
         </div>
       <div style={{gridArea: '2 / 3 / 2 / 5'}}>
-        <TournamentInfo matchHistory={matchHistory} groups={groups}/>
+        <TournamentInfo matchHistory={matchHistory} groups={groups} playingTeams={playingTeams} />
       </div>
     </div>
   );
