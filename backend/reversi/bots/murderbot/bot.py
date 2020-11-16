@@ -16,7 +16,7 @@ class Bot:
         # Initialize your bot here
         # Name, author, and have to be set
         # Feel free to add your own instance variables
-        self.name = "Murderfucker"
+        self.name = "Murderbot"
         self.author = "killmaster200 & Bob"
         self.color = color
         self.turns = ["black", "white"]
